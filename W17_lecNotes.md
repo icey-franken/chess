@@ -7,7 +7,7 @@ ________________________________________________________________________________
 
 _________________________________________________________________________________________
 
-### Gordon - Intro to Python (OBS#1 start - x:xx)
+### Gordon - Intro to Python (OBS#1 start - 0:30)
 
 * block comments with """block comment here""" - we should be putting these at the top of every file letting folks know what's going on
 
