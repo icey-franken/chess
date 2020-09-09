@@ -11,9 +11,31 @@ ________________________________________________________________________________
 
 * block comments with """block comment here""" - we should be putting these at the top of every file letting folks know what's going on
 
-_________________________________________________________________________________________
+## W17D3 (Python 3)
 
-### Notes on [lecture vid title]
+Gordon on how to do logging in Python 3:
+
+```python
+################################################################################
+# configure logging - here we just log to the console
+################################################################################
+import logging
+logger = logging.Logger(__file__)
+# set the level for this logger
+logger.setLevel(logging.DEBUG)
+# set the level for the (console) logging handler
+handler = logging.StreamHandler()
+handler.setLevel(logging.DEBUG)
+# define a format string for logging output
+formatter = logging.Formatter("%(asctime)s [%(levelname)s]: %(message)s")
+# attach the formatter to the handler
+handler.setFormatter(formatter)
+# and the handler to the logger
+logger.addHandler(handler)
+################################################################################
+```
+
+Gordon says: "invoke this as logger.debug(_whatever_) or logger.info... similarly warning and error"
 
 _________________________________________________________________________________________
 _________________________________________________________________________________________
