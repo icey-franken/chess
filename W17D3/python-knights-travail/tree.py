@@ -84,10 +84,14 @@ class Node:
             # parent.add_child(parent())
 
     def __str__(self):
-        return('%s (parent: %s) children: %s' %
-               (self.value,
-                self.parent and self.parent.value,
-                ', '.join([child.value for child in self.children])))
+        return('{0} (parent: {1}) children: {2}'
+               .format(self.value,
+                       self.parent and self.parent.value,
+                       [child.value for child in self.children]))
+        #  %
+        #        (self.value,
+        #         self.parent and self.parent.value,
+        #         ', '.join([child.value for child in list(self.children)])))
 
 ######################################################
 # in class: we need to tell pyton what it means for a node equality looks like.
