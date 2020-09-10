@@ -73,7 +73,7 @@ class KnightPathFinder():
         nodes = [self.rootNode]
         while len(nodes) > 0:
             parentNode = nodes.pop(0)
-            # get all new move positions from first position entry
+            # get all new move positions first position entry
             # moves is a set of all unique moves
             moves = self.new_move_positions(parentNode.value)
             for move in moves:
@@ -86,7 +86,21 @@ class KnightPathFinder():
 
     def find_path(self, end_position):
         endNode = self.rootNode.breadth_search(end_position)
-        return endNode
+        path = self.trace_to_root(endNode)
+        return path
+
+    def trace_to_root(self, end_node):
+        nodeList = [end_node]
+        node = end_node
+        # print(node.parent, node.parent is None)
+        # print(node.parent.parent, node.parent.parent is None)
+        while node.parent is not None:
+            # print(node, node.parent)
+            node = node.parent
+            nodeList.append(node)
+        nodeList.reverse()
+        positionList = [node.value for node in nodeList]
+        return positionList
 
     def __str__(self):
         return('''path-finders.py
@@ -98,10 +112,12 @@ class KnightPathFinder():
 
 finder = KnightPathFinder((0, 0))
 finder.build_move_tree()
-print(finder.rootNode.children[1])
-print('find path for (1, 2): ', finder.find_path((1, 2)))
 print('find path for (2, 1): ', finder.find_path((2, 1)))
-print('find path for (8,8): ', finder.find_path((4,7)))
+print('find path for (3, 3): ', finder.find_path((3, 3)))
+print('find path for (6, 2): ', finder.find_path((6, 2)))
+print('find path for (7, 6): ', finder.find_path((7, 6)))
+
+# print('find path for (8,8): ', finder.find_path((4, 7)))
 # logger.debug(finder)
 # builtMoveTree = finder.build_move_tree()
 # logger.debug(builtMoveTree)
@@ -110,7 +126,7 @@ print('find path for (8,8): ', finder.find_path((4,7)))
 # print(finder._root.children)
 # # logger.debug(finder.rootNode.children[0])
 # print('------------------------')
-# these print like I expect - the issue is that they look wrong when printed from find path function
+# these print like I expect - the issue is that they look wrong when printed find path function
 # logger.debug(finder.rootNode)
 # logger.debug(finder.rootNode.children)
 # logger.debug(finder.rootNode.children[0]) # .children[0])
