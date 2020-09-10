@@ -41,6 +41,7 @@ class KnightPathFinder():
         return self._considered_positions
 
     def get_valid_moves(self, pos):
+        boardSize = 9  # change to 9 - 4 for debugging purposes
         validMovesList = []
         oneMoves = [1, -1]
         twoMoves = [2, -2]
@@ -50,9 +51,9 @@ class KnightPathFinder():
             for move2 in twoMoves:
                 xMove2 = move2 + pos[0]
                 yMove2 = move2 + pos[1]
-                if 0 <= xMove1 < 9 and 0 <= yMove2 < 9:
+                if 0 <= xMove1 < boardSize and 0 <= yMove2 < boardSize:
                     validMovesList.append((xMove1, yMove2))
-                if 0 <= xMove2 < 9 and 0 <= yMove1 < 9:
+                if 0 <= xMove2 < boardSize and 0 <= yMove1 < boardSize:
                     validMovesList.append((xMove2, yMove1))
         return set(validMovesList)
 
@@ -68,33 +69,23 @@ class KnightPathFinder():
         return newPossibleMoves
 
     def build_move_tree(self):
-        node = self.rootNode  # to start
-        # initialize positions array with start position
-        positions = [self.start]
-        while len(positions) > 0:
+        # initialize positions array with root node
+        nodes = [self.rootNode]
+        while len(nodes) > 0:
+            parentNode = nodes.pop(0)
             # get all new move positions from first position entry
-            moves = self.new_move_positions(positions[0])
             # moves is a set of all unique moves
+            moves = self.new_move_positions(parentNode.value)
             for move in moves:
                 # create a node for each one and add as child to node
                 childNode = Node(move)
-                node.add_child(childNode)
-                # print('new child node: ', childNode)
-                # print('node after child added: ', node)
-                # add the move to the positions list
-                positions.append(move)
-            # remove first position entry - all new moves added
-            print(node)
-            positions.remove(positions[0])
-            # assign node last so we can initialize with root node
-            # this is kind of defeating the pupose of a while loop
-            # but without this check at the end it throws an error
-            if len(positions) > 0:
-                node = Node(positions[0])
-        return self
+                parentNode.add_child(childNode)
+                # add the NODE to the positions list
+                # problem I had was because I was creating new nodes every time
+                nodes.append(childNode)
 
     def find_path(self, end_position):
-        endNode = self.rootNode.depth_search(end_position)
+        endNode = self.rootNode.breadth_search(end_position)
         return endNode
 
     def __str__(self):
@@ -107,10 +98,10 @@ class KnightPathFinder():
 
 finder = KnightPathFinder((0, 0))
 finder.build_move_tree()
-rootImmediateChildren = finder.rootNode.children
-
-print(rootImmediateChildren[0])
-print(finder.find_path((3, 3)))
+print(finder.rootNode.children[1])
+print('find path for (1, 2): ', finder.find_path((1, 2)))
+print('find path for (2, 1): ', finder.find_path((2, 1)))
+print('find path for (8,8): ', finder.find_path((4,7)))
 # logger.debug(finder)
 # builtMoveTree = finder.build_move_tree()
 # logger.debug(builtMoveTree)
