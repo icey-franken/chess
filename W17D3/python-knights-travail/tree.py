@@ -33,11 +33,15 @@ class Node:
 
     # @children.setter
     def add_child(self, child):  # setter for add child to node
+        # print('1child - child not in self.children' ,child not in self.children)
         if child not in self.children:
             self.children.append(child)
+        # print('2child - child.parent is not self', child.parent is not self)
         if child.parent is not self:
             # child.parent(self)  # this
             child.parent = self  # or this
+
+        # print('3child - parent (self) at end of add child method', self)
 
     # @children.setter
     def remove_child(self, child):  # setter for remove node's child
@@ -65,15 +69,19 @@ class Node:
     @parent.setter
     def parent(self, newParent):  # setter for node's parent
         oldParent = self.parent
+        # print(self.parent is not newParent)
         if self.parent is not newParent:
             self._parent = newParent
-        if oldParent is not None and oldParent != newParent:
+        # print(oldParent is not None and oldParent != newParent)
+        if oldParent is not None and oldParent.value != newParent.value:
             self._parent = None
             oldParent.remove_child(self)  # this
             # oldParent.remove_child = self  # or this
         if newParent is not None:
-            newParent.add_child(self)  # this
+            if self not in newParent.children:
+                newParent.add_child(self)  # this
             # newParent.add_child = self  # or this
+        # print('1parent - child (self) at end of parent setter', self)
 
         # if newParent is None:
         #     self._parent = None
@@ -81,10 +89,15 @@ class Node:
         # print(self.parent is not None)
 
         # if self.parent is not None:
-            # parent.add_child(parent())
+        # parent.add_child(parent())
 
     def __str__(self):
-        return('{0} (parent: {1}) children: {2}'
+        def showParent(self):
+            if self.parent is None:
+                return 'no parent'
+            else:
+                return self.parent.value
+        return('''~~~tree.py value: {0} ---parent: {1} ---children: {2}~~~'''
                .format(self.value,
                        self.parent and self.parent.value,
                        [child.value for child in self.children]))
@@ -124,13 +137,15 @@ class Node:
 
     # recursive depth_search method
     def depth_search(self, value):
+        # print('value: ', value)
+        # print('self: ', self)
         if self.value == value:
             return self
         for child in self.children:
             result = child.depth_search(value)
             if result is not None:
                 return result
-
+        return None
     ######################################################
 
     # breadth first search of nodes - method
@@ -150,51 +165,51 @@ class Node:
 
 ####################################################
 # Gordon said this was a way to test that our code is doing what we want it to.
-if __name__ == '__main__':
-    class TreeNodeIsSearchable:
-        def setUp(self):
-            self.nodes = [Node(i) for i in "abcdefg"]
-            parent_index = 0
-            for index, child in enumerate(self.nodes):
-                if index == 0:
-                    continue
-                child.parent = self.nodes[parent_index]
-                parent_index += 1 if index % 2 == 0 else 0
-            return self.nodes
-        # node = Node('George')
-        # node.add_child(Node('Mary'))
-        # node.add_child(Node('David'))
-        # logger.debug(node)
-    nodes = TreeNodeIsSearchable().setUp()
-    logger.debug([nodes[i].value for i in range(len(nodes))])
-    logger.debug(nodes[0].depth_search('e'))
-    logger.debug(nodes[4])
-    # logger.debug(type(nodes))
-    # print(node)
+# if __name__ == '__main__':
+#     class TreeNodeIsSearchable:
+#         def setUp(self):
+#             self.nodes = [Node(i) for i in "abcdefg"]
+#             parent_index = 0
+#             for index, child in enumerate(self.nodes):
+#                 if index == 0:
+#                     continue
+#                 child.parent = self.nodes[parent_index]
+#                 parent_index += 1 if index % 2 == 0 else 0
+#             return self.nodes
+#         # node = Node('George')
+#         # node.add_child(Node('Mary'))
+#         # node.add_child(Node('David'))
+#         # logger.debug(node)
+#     nodes = TreeNodeIsSearchable().setUp()
+#     logger.debug([nodes[i].value for i in range(len(nodes))])
+#     logger.debug(nodes[0].depth_search('e'))
+#     logger.debug(nodes[4])
+#     # logger.debug(type(nodes))
+#     # print(node)
 
 
 ########################################################
 #  practice/scratch code
 ########################################################
 
-node1 = Node('root1')
-node2 = Node('root2')
-node3 = Node('root3')
-# print('node1.value ', node1.value)
-# print('node1.children before ', node1.children)
-# node1.add_child = node2
-# print('node1.children after ', node1.children)
+# node1 = Node('root1')
+# node2 = Node('root2')
+# node3 = Node('root3')
+# # print('node1.value ', node1.value)
+# # print('node1.children before ', node1.children)
+# # node1.add_child = node2
+# # print('node1.children after ', node1.children)
 
-node3.parent = node1
-node3.parent = node2
+# node3.parent = node1
+# node3.parent = node2
 
-# print(node1.children)
-# print(node2.children)
-# child1 = Node('child1')
-# parent1 = Node('parent')
-# child2 = Node('child2')
-# child3 = Node('child3')
+# # print(node1.children)
+# # print(node2.children)
+# # child1 = Node('child1')
+# # parent1 = Node('parent')
+# # child2 = Node('child2')
+# # child3 = Node('child3')
 
 
-# child1.parent = parent1
-# child2.parent = parent1
+# # child1.parent = parent1
+# # child2.parent = parent1

@@ -68,63 +68,59 @@ class KnightPathFinder():
         return newPossibleMoves
 
     def build_move_tree(self):
-        # rootNode = Node(self.start)
-
         node = self.rootNode  # to start
+        # initialize positions array with start position
         positions = [self.start]
         while len(positions) > 0:
+            # get all new move positions from first position entry
             moves = self.new_move_positions(positions[0])
+            # moves is a set of all unique moves
             for move in moves:
-                node.add_child(Node(move))
+                # create a node for each one and add as child to node
+                childNode = Node(move)
+                node.add_child(childNode)
+                # print('new child node: ', childNode)
+                # print('node after child added: ', node)
+                # add the move to the positions list
                 positions.append(move)
+            # remove first position entry - all new moves added
+            print(node)
             positions.remove(positions[0])
             # assign node last so we can initialize with root node
-            # there must be a better way
             # this is kind of defeating the pupose of a while loop
-            # without this check at the end it throws and error
+            # but without this check at the end it throws an error
             if len(positions) > 0:
                 node = Node(positions[0])
+        return self
 
-            # logger.debug(node)
-
-        # create a node for each move and add it as a child to root
-        # parent method also adds each node as a child of root
-        # could also do this with the add_child method instead
-        # outcome should be the same - verify this
-        # for move in moves:
-        #     rootNode.add_child(Node(move))
-        #     # Node(move).parent = rootNode
-        # for child in rootNode.children:
-        #     moves = self.new_move_positions(child.value)
-        #     for move in moves:
-        #     child.add_child(Node(move))
-        #     print(moves, child.value)
-        #     logger.debug(child)
-        # return rootNode
-        # for move in currentMoves:
-        #     rootNode.add_child(move)
-        # logger.info(currentMoves)
-        # print(rootNode.children)
+    def find_path(self, end_position):
+        endNode = self.rootNode.depth_search(end_position)
+        return endNode
 
     def __str__(self):
-        return('''
+        return('''path-finders.py
         start: {0}
         pos: {1}
         considered_positions: {2}'''
                .format(self.start, self.pos, self.consideredMoves))
 
 
-finder = KnightPathFinder((2, 2), startPos=(2, 2))
-logger.debug(finder)
-# logger.debug(finder.new_move_positions((0, 0)))
-# logger.debug(finder)
-# logger.debug(finder.new_move_positions((3, 3)))
-# logger.debug(finder)
-# logger.debug(finder.new_move_positions((8, 8)))
-# logger.debug(finder)
-# logger.debug(finder.new_move_positions((8, 8)))
-# logger.debug(finder)
+finder = KnightPathFinder((0, 0))
 finder.build_move_tree()
-logger.debug(finder.rootNode.children)
-logger.debug(finder)
+rootImmediateChildren = finder.rootNode.children
+
+print(rootImmediateChildren[0])
+print(finder.find_path((3, 3)))
+# logger.debug(finder)
+# builtMoveTree = finder.build_move_tree()
+# logger.debug(builtMoveTree)
+# # logger.debug(builtMoveTree.rootNode.children[0])
+# # logger.debug(finder.find_path((3, 3)))
 # print(finder._root.children)
+# # logger.debug(finder.rootNode.children[0])
+# print('------------------------')
+# these print like I expect - the issue is that they look wrong when printed from find path function
+# logger.debug(finder.rootNode)
+# logger.debug(finder.rootNode.children)
+# logger.debug(finder.rootNode.children[0]) # .children[0])
+# logger.debug(finder.rootNode.children[0].children[0].parent)
