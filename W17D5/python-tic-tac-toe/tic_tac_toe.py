@@ -67,7 +67,6 @@ def play_again():
 
 def make_move(board, letter, move):
     """Set the board at index move to the provided letter"""
-    print('line 68', type(move))
     board[move] = letter
     return board
 
