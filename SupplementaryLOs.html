@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Summary Review Materials</title>
+        <style>
+</style>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h2 id="summary-review-materials">Summary Review Materials</h2>
+<h3 id="boolean-short-circuit">Boolean Short-Circuit</h3>
+<p>Understand the simple and complete forms of the common Python idiom that uses the boolean short curcuit to effectively provide a ternery operator:</p>
+<pre><code class="language-py"><div><span class="hljs-comment"># simple form, result is y if x is truthy, else z - works if y is always truthy</span>
+result = x <span class="hljs-keyword">and</span> y <span class="hljs-keyword">or</span> z
+
+<span class="hljs-comment"># 'safe' form, protected against y being falsey</span>
+result = (x <span class="hljs-keyword">and</span> [y] <span class="hljs-keyword">or</span> [z])[<span class="hljs-number">0</span>]
+</div></code></pre>
+<h3 id="the-pass-keyword">The <code>pass</code> keyword</h3>
+<p>Because Python's code blocks are noted by indentation, an empty code block is a problem for the language parser.  The solution is to use the place-holder keyword, <code>pass</code>:</p>
+<pre><code class="language-python"><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">i_am_definitely_going_to_code_something_here_later</span><span class="hljs-params">(*args, **kwargs)</span>:</span>
+  <span class="hljs-keyword">pass</span>
+
+<span class="hljs-comment"># without the pass keyword the class statement below would trigger an IndentationError</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SomeClass</span><span class="hljs-params">(SomeParent)</span>:</span>
+  <span class="hljs-string">'''a docstring'''</span> <span class="hljs-comment"># a docstring serves the same purpose as 'pass' ...</span>
+
+<span class="hljs-comment"># ... so this comment and the statement below will not raise an IndentationError</span>
+x = <span class="hljs-number">10</span>
+</div></code></pre>
+<p>BONUS: There is another Python &quot;do nothing&quot; construct, the elipsis (<code>...</code>)  According to the docs, the elipsis is a even more generic placeholder than <code>pass</code>, so you can use it in the same way as <code>pass</code> if you think it looks cool - but other developers may be confused.</p>
+<h3 id="classes-in-python">Classes in Python</h3>
+<p>&quot;Understand what a <code>class</code> in Python is&quot; : a class in Python is a user-defined datatype.  The functions associated with a class are called <em>methods</em>, and are distinguished from regular functions by having a first parameter that provides context, conventionally (always) named <code>self</code>.  (user-defined) Classes are by convention named with <code>TitleCase</code>; class attributes are named using <code>snake_case</code>.  Many built-in classes have lowercase names, like <code>range</code> and <code>property</code>  The commonality is that an instance of a class is <em>always</em> created by invoking the class name itself: <code>x = MyClass(...)</code> or <code>y = property(...)</code> or <code>for i in range(...)</code>.</p>
+<p>Most of the magic of Python is conjured via the use of various &quot;dunder&quot; (for double-underscore) features of classes.  The most interesting ones for immediate gratification are:</p>
+<h4 id="dunder-methods-a-few-common-ones">dunder methods (a few common ones)</h4>
+<ul>
+<li><code>__init__</code>: this method initializes a new instance of a class (an object).  This method roughly corresponds to a <code>constructor</code> method in JavaScript.</li>
+<li><code>__str__</code>: this method defines how the object can be represented as a string.</li>
+<li><code>__repr__</code>: this method also defines how an object can be rendered as a string - by convention, <code>__str__</code> returns a human-friendly representation of the object, whereas <code>__repr__</code> returns (ideally) a string that if executed by the Python interpreter would recreate the object.</li>
+<li><code>__eq__</code>: this method determines how the <code>==</code> operator will compare an object of the class to some other object - due to duck typing, <code>other</code> might or might not be &quot;the same type&quot; as <code>self</code>.
+NOTE: If this operator is not defined and your class is not derived from a class with defined equivalence symantics, <code>==</code> invokes <code>is</code> and returns object identity.</li>
+</ul>
+<h4 id="dunder-attributes-a-few-common-ones">dunder attributes (a few common ones)</h4>
+<ul>
+<li><code>__dict__</code>: every object (and classes _are_objects!) has a <code>__dict__</code> attribute that contains all of the regular instance variables, whether they are data (attributes) or code (methods).</li>
+<li><code>__slots__</code>: this class variable (which should be a list of strings) can be used to instruct the interpreter to pre-allocate space for the corresponding attribute names when the object is created.  Practially, this is mostly of interest to systems that are making a lot of objects at the same time.</li>
+<li><code>__class__</code>: yes, the class of an object is availble as an attribute.  Classes have <code>__name__</code> attributes, so to get the name of an object's class as a string, reference <code>obj.__class__.__name__</code></li>
+</ul>
+<h4 id="more-on-classes">More on Classes</h4>
+<p>Methods are declared using the <code>def</code> keyword, similar to regular functions.  The only difference is that a method is embedded in a class, and the first parameter should always be <code>self</code>.</p>
+<p>EXCEPTION: methods decorated with <code>@classmethod</code> or <code>@staticmethod</code> <em>decorators</em> have different rules regarding their expected parameters - the first parameter to a class method is the class itself (usually styled as <code>cls</code> or <code>klass</code>, since <code>class</code> is a Python keyword), while a static method does not constrain its parameter list.</p>
+<p>A Python <em><em>decorator</em></em> is an inline function that is introduced with an at-sign (<code>@</code>) and that immediately preceeds a function or method in code.  A decorator is like a closure, in that it wraps a function object and modifies its behavior.</p>
+<p>The decorator introduced with this week's material is <code>@property</code>, which constructs a property object (instance of the <code>property</code> class) and assigns it to the same name as the method that immediately follows the decorator.  A property defined in this way consists of a (required) <code>getter</code> method, and optional <code>setter</code>, <code>deleter</code> methods and docstring attribute.  Properties allow you to read, write and remove &quot;virtual&quot; attributes of your object in a syntactically simple way, as if they were regular instance attributes.</p>
+<p>Python classes have no &quot;private&quot; or &quot;protected&quot; member variables, same as JavaScript.  The convention in Python code is to name implementation methods and attributes with a leading underscore, like <code>_count = 0</code> and <code>def _increment_counter(self):</code>.  You will generally not read, write or call these non-public members. (but they can be inspected!)</p>
+<h2 id="structured-exception-handling-in-python">Structured Exception Handling in Python</h2>
+<p>One of the things that sets Python apart from other languages is the aggressive use of the built in structured exception handling mechanism (SEH).  SEH in Python depends on a hierarchy of classes derived from <code>BaseException</code>, and the syntax of the <code>try</code> block, which must include at least one <code>except</code> block, and may include a <code>finally</code> block.</p>
+<p>Developers are free to derive their own classes of exceptions, generally inheriting from the <code>Exception</code> class.  A custom exception can be initialized and raised via the <code>raise</code> statement.</p>
+<p>For an example of exception handling, see W17D4/src/why_does_pythons_for_have_an_else.py</p>
+
+    </body>
+    </html>
