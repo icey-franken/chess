@@ -37,11 +37,11 @@ class Node:
         if child not in self.children:
             self.children.append(child)
         # print('2child - child.parent is not self', child.parent is not self)
-        child.parent = self
+        # child.parent = self
         # changed parent method
-        # if child.parent is not self:
+        if child.parent is not self:
         #     # child.parent(self)  # this
-        #     child.parent = self  # or this
+            child.parent = self  # or this
 
         # print('3child - parent (self) at end of add child method', self)
 
@@ -49,7 +49,7 @@ class Node:
     def remove_child(self, child):  # setter for remove node's child
         if child in self.children:
             self.children.remove(child)
-        child.parent = None
+            child.parent = None
         # changed parent method
         # if child.parent is not None:
         #     # child.parent(None)  # this
@@ -72,21 +72,25 @@ class Node:
 
     @parent.setter
     def parent(self, newParent):  # setter for node's parent
-        self._parent = newParent
+        # self._parent = newParent
         # print('''hits parent setter
         # self: {0}
         # parent: {1}
         # '''.format(self, newParent))
         # old code - changed so that you MUST call add/remove child. Do NOT set parent without calling one of those methods.
         # oldParent = self.parent
-        # # print(self.parent is not newParent)
-        # if self.parent is not newParent:
-        #     self._parent = newParent
-        # # print(oldParent is not None and oldParent != newParent)
-        # if oldParent is not None and oldParent.value != newParent.value:
-        #     self._parent = None
-        #     oldParent.remove_child(self)  # this
-        #     # oldParent.remove_child = self  # or this
+        # print(self.parent is not newParent)
+        if self.parent is newParent:
+            return
+        if self.parent is not None:
+            self.parent.remove_child(self)
+
+        if newParent is not None:
+            self._parent = newParent
+            self.parent.add_child(self)
+        else:
+            self._parent = None
+            # oldParent.remove_child = self  # or this
         # if newParent is not None:
         #     if self not in newParent.children:
         #         newParent.add_child(self)  # this
