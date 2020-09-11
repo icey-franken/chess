@@ -21,16 +21,20 @@ def space_value(board, index):
 
 def draw_board(board):
     """This function prints out the board that it was passed."""
+    # this shit is bc the linter is driving me mad
+    val = [space_value(board, i) for i in range(1, 10)]
+    rang = range(0, 9, 3)
+    boardString = [f''' {val[i]} | {val[i+1]} | {val[i+2]}''' for i in rang]
     print("   |   |")
-    print(f''' {space_value(board, 7)} | {space_value(board, 8)} | {space_value(board, 9)}''')
+    print(boardString[2])
     print("   |   |")
     print("-----------")
     print("   |   |")
-    print(f''' {space_value(board, 4)} | {space_value(board, 5)} | {space_value(board, 6)}''')
+    print(boardString[1])
     print("   |   |")
     print("-----------")
     print("   |   |")
-    print(f''' {space_value(board, 1)} | {space_value(board, 2)} | {space_value(board, 3)}''')
+    print(boardString[0])
     print("   |   |")
 
 
