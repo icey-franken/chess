@@ -9,7 +9,8 @@
 # There are two sample data calls for you to use.
 
 # WRITE YOUR FUNCTION HERE
-
+def my_comprehension(iterInts):
+    return [iterInts[i]**2 for i in range(len(iterInts))]
 
 # TEST DATA
 test1 = [1, 2, 3, 4]

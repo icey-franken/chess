@@ -25,7 +25,17 @@
 # There are seven sample data calls for you to use.
 
 # WRITE YOUR FUNCTION HERE
-
+def good_or_bad(string):
+    if string in ['Coffee', 'Ice Cream']:
+        return 'Good'
+    elif string in ['Phone in Toilet', 'Sleeping through alarm']:
+        return 'Bad'
+    elif string == '6 Pieces of plain bread':
+        return 'Okay?'
+    elif string == 'Doe':
+        return 'A dear, a female dear'
+    else:
+        return None
 
 # TEST DATA
 print("good_or_bad test1:", good_or_bad("Coffee")) # => "Good"

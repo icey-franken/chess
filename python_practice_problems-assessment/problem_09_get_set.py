@@ -1,13 +1,26 @@
 # GETTERS AND SETTERS
-# 
+#
 # Create a class "GetItSetIt" that will be initialized with a single value
 #   Write a getter and a setter for this value
 #   Write a method called forget which will assign the value to None
-# 
-# 
-# 
+#
+#
+#
 #  --- YOUR CODE HERE ---
+class GetItSetIt:
+    def __init__(self, value):
+        self._value = value
 
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, newValue):
+        self._value = newValue
+
+    def forget(self):
+        self.value = None
 
 
 

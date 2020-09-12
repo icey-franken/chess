@@ -8,12 +8,15 @@
 # There are three sample data calls for you to use below.
 
 # WRITE YOUR FUNCTION HERE
+def my_while_filter(iterable):
+    return [iterable[i] for i in range(len(iterable)) if iterable[i] % 2 == 0]
 
 
 # TEST DATA
 test1 = [2]
-print("my_while_filter test1:", my_while_filter(test1)) # => [2]
+print("my_while_filter test1:", my_while_filter(test1))  # => [2]
 test2 = list(range(40))
-print("my_while_filter test2:", my_while_filter(test2)) # => [2, 4, 6, 8, 10, 12, 14, 16, ... 40]
+# => [2, 4, 6, 8, 10, 12, 14, 16, ... 40]
+print("my_while_filter test2:", my_while_filter(test2))
 test3 = []
-print("my_while_filter test3:", my_while_filter(test3)) # => []
+print("my_while_filter test3:", my_while_filter(test3))  # => []

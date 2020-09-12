@@ -5,13 +5,14 @@
 #   one 's' character.
 #
 #  Use the "filter" method to do this.
-# 
-# 
-# 
+#
+#
+#
 #
 #  --- YOUR CODE HERE ---
 
-
+def filter_s_words(iterable):
+    return list(filter(lambda string: 's' in string, iterable))
 
 
 #

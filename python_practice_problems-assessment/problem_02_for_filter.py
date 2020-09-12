@@ -10,11 +10,14 @@
 # There are two sample data calls for you to use.
 #
 # WRITE YOUR FUNCTION HERE
+def my_for_filter(strIter, suffix):
+    return [strIter[i] for i in range(len(strIter)) if strIter[i].endswith(suffix)]
 
 
 # TEST DATA
 test1 = ["plop", "", "drip", "zop", "stop"]
-print("my_for_filter test1:", my_for_filter(test1, "op")) # => ["plop", "zop", "stop"]
+print("my_for_filter test1:", my_for_filter(
+    test1, "op"))  # => ["plop", "zop", "stop"]
 
 test2 = ["plop", "", "drip", "zop", "stop"]
 print("my_for_filter test2:", my_for_filter(test2, "mop"))  # => []
