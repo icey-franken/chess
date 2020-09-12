@@ -65,11 +65,30 @@ class BST():
     # TODO: Implement iterative search method
 
     def search_iteratively(self, value):
-        pass
+        current_node = self.root
+        while current_node is not None:
+            if value < current_node.value:
+                current_node = current_node.left
+            elif value > current_node.value:
+                current_node = current_node.right
+            else:
+                return True
+        return False
+
 
     # TODO: Implement recursive search method
     def search_recursively(self, value, current_node=False):
-        pass
+        if current_node is False:
+            current_node = self.root
+        if current_node is None:
+            return False
+        if value < current_node.value:
+            return self.search_recursively(value, current_node.left)
+        elif value > current_node.value:
+            return self.search_recursively(value, current_node.right)
+        else:
+            return True
+
 
 
 tree = BST()
@@ -91,14 +110,14 @@ print(tree.root.left.right.value)     # 7
 print(tree.root.right.right.value)    # 16
 
 # # 2. Test iterative search
-# empty_tree = BinarySearchTree(2)
-# print(empty_tree.search_iteratively(10))  # False
-# print(tree.search_iteratively(10))        # True
-# print(tree.search_iteratively(7))         # True
-# print(tree.search_iteratively(-1))        # False
+empty_tree = BST()
+print(empty_tree.search_iteratively(10))  # False
+print(tree.search_iteratively(10))        # True
+print(tree.search_iteratively(7))         # True
+print(tree.search_iteratively(-1))        # False
 
 # # 3. Test recursive search
-# print(empty_tree.search_recursively(10))  # False
-# print(tree.search_recursively(10))        # True
-# print(tree.search_recursively(7))         # True
-# print(tree.search_recursively(-1))        # False
+print(empty_tree.search_recursively(10))  # False
+print(tree.search_recursively(10))        # True
+print(tree.search_recursively(7))         # True
+print(tree.search_recursively(-1))        # False
