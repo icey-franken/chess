@@ -63,19 +63,23 @@ class Square:
     def occupant(self):
         return self._occupant
 
+    # occupant will be an instance of a piece on which we can call various methods
     @occupant.setter
     def occupant(self, newOccupant):
-        if self.is_occupied():
+        if self.is_occupied() and newOccupant is not None:
             print('SPOT IS OCCUPIED - MOVE NOT MADE')
+        elif not self.is_occupied() and newOccupant is None:
+            print('SPOT IS ALREADY EMPTY')
         else:
             self._occupant = newOccupant
 
-    @occupant.deleter
-    def occupant(self):
-        if not self.is_occupied():
-            print('NO PIECE IN THIS SQUARE - PIECE NOT DELETED')
-        else:
-            self._occupant = None
+    # I don't think we need a deleter - instead we want to set newOccupant to None
+    # @occupant.deleter
+    # def occupant(self):
+    #     if not self.is_occupied():
+    #         print('NO PIECE IN THIS SQUARE - PIECE NOT DELETED')
+    #     else:
+    #         self._occupant = None
 
     def is_occupied(self):
         return self.occupant is not None

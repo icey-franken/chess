@@ -138,6 +138,46 @@ class Board:
     def clear_board(self):
         pass
 
+    def get_valid_board_moves(self, piece_to_move):
+        """
+        - this method takes in a particular piece
+        - we access Piece.color to determine if we get piece from self.white_pieces or self.black_pieces
+            - maybe it makes more sence to have all pieces in one spot - for now don't worry
+        - we access piece_to_move to get that piece instance
+
+        - assuming that piece_to_move is something like "white_rook_1" and that we put all pieces together:
+        piece = self.all_pieces[piece_to_move]
+        - on the piece we have position, color, is_captured, and name. On piece type we have get_valid_piece_moves method:
+            - this method accesses position on piece to calculate valid moved
+        valid_piece_moves = piece.get_valid_piece_moves()
+        - valid_piece_moves should be a list of sublists
+
+        - for each sublist we start at the beginning and go until space occupied - something like:
+            valid_board_moves = []
+            # this accesses each sublist
+            for i in range(len(valid_piece_moves)):
+                sublist = valid_piece_moves[i]
+                j = 0
+                !!!make sure to access square based on position given in sublist
+                x, y = sublist[j] # this should be a x, y tuple
+                while not self.squares[x][y].is_occupied:
+                    valid_board_moves.append(sublist[j])
+                    j += 1
+
+        - ***SEE BELOW: based on get_piece_moves return value, the board then checks squares at those positions and filters moves
+            - if is_occupied and occupant color is the same as current piece then that move is invalid
+            -
+
+
+        - I think for each Piece type we want a method that returns possible moves in a list of sublists (with no board knowledge).
+            - each sublist is possible moves going in one direction, starting from piece position to the end of the board
+            - in that way if we find that a space is occupied midway through the sublist we can slice the list at that point and remove moves beyond.
+            - we can do that operation on each sublist (for all but knight piece)
+            - end result will be possible moves
+        """
+
+
+
     def __repr__(self):
         boardStr = ''
         endStr = '''
@@ -188,3 +228,37 @@ logging.info(f'square 0 0 is_occ: {sq.is_occupied()}')
 sq.occupant = dummyPiece
 logging.info(f'square 0 0 occ: {sq.occupant}')
 logging.info(f'square 0 0 is_occ: {sq.is_occupied()}')
+if sq.is_occupied():
+    logging.info(sq.occupant)
+    sq.occupant = None
+    logging.info(sq.occupant)
+
+
+"""
+TO MAKE A MOVE:
+- assume that move is valid for particular piece - will add method
+    - "valid move" depends on piece type and position
+        - position must be within the board
+        - position must be of piece's ability
+        - position must be unoccupied or occupied by opposing piece
+        - SPECIAL CASE FOR KINGS - WORRY LATER
+- if move valid (again ONLY based on piece type and position):
+    - if Square.is_occupied() is False: move piece
+        - "moving piece": set occupant in square; change piece position
+    - elif Square.is_occupied() is True: check occupant
+        - if occupant is same color, move is invalid - DON'T MOVE
+        - if occupant is diff color, move is valid
+            - change current occupant is_captured to True
+            - move piece: set occupant in square, change piece position.
+
+- I should add a method on each piece type that will return all potential moves based ONLY on piece type and current position
+    - this is because piece has no knowledge of other pieces on the board
+- the board will filter out invalid moves based on if current occupant color for each valid move matches the piece to be moved
+- the result of this filtering are ACTUALLY valid moves
+- only distinction from that point is if a piece will be caputred or not.
+
+
+**thought: the valid moves thing needs to be completely on a piece, so maybe a piece needs to know about the squares on board class.
+I say this because valid moves is different for each piece. For example, most pieces can only move until they reach another piece - they can't move beyond that. But knights dpon't care about that.
+I can either pass the board into each get_valid_moves for each piece, OR I can put a special case on the board class for piece name is knight - in that case we get rid of thing that stops piece movement if it encounters another piece.
+"""

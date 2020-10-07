@@ -47,5 +47,8 @@ class Piece:
         else:
             self._is_captured = captured_boolean
 
+
+
+
     def __repr__(self):
         return f'{str(self._color)} {str(self._name)} {str(self.position)}'
