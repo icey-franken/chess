@@ -4,12 +4,26 @@
 
 # advantage of get_position method vs just accessing piece property?
 
+# - I think for each Piece type we want a method that returns possible moves in a list of sublists (with no board knowledge - only position knowledge).
+#             - each sublist is possible moves going in one direction, starting from piece position to the end of the board
+#             - in that way if we find that a space is occupied midway through the sublist we can slice the list at that point and remove moves beyond.
+#             - we can do that operation on each sublist (for all but knight piece)
+#             - end result will be possible moves
+
 class Piece:
     def __init__(self, position, color, name=None, is_captured=False):
         self._position = position
         self._color = color
         self._is_captured = is_captured
         self._name = name
+
+    @property
+    def color(self):
+        return self._color
+
+    @property
+    def name(self):
+        return self._name
 
     @property
     def position(self):

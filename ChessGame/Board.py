@@ -87,6 +87,8 @@ class Board:
         white occupies rows 1 and 2
         black occupies rows 7 and 8
         """
+        # maybe we don't even want to do this - what we really want to do is assign pieces as occupants of corresponding squares
+
         white_pieces = dict(
             white_rook_1=Rook((0, 0), 'White'),
             white_knight_1=Knight((1, 0), 'White'),
@@ -141,20 +143,32 @@ class Board:
     def get_valid_board_moves(self, piece_to_move):
         """
         - this method takes in a particular piece
-        - we access Piece.color to determine if we get piece from self.white_pieces or self.black_pieces
-            - maybe it makes more sence to have all pieces in one spot - for now don't worry
-        - we access piece_to_move to get that piece instance
+        - when user clicks a square we check if it is their turn and the piece belongs to them based on square.occupant property
 
-        - assuming that piece_to_move is something like "white_rook_1" and that we put all pieces together:
-        piece = self.all_pieces[piece_to_move]
-        - on the piece we have position, color, is_captured, and name. On piece type we have get_valid_piece_moves method:
-            - this method accesses position on piece to calculate valid moved
-        valid_piece_moves = piece.get_valid_piece_moves()
-        - valid_piece_moves should be a list of sublists
+        <square id={square.name} onClick={handleClick} />
+        const handleClick = (e) => {
+            squareName = e.target.id
+            squarePos = Square.get_pos_from_square_name(squareName)
+            square = Board.getSquare(squarePos)
+            piece = square.occupant
+            if(piece is None):
+                # no piece in square therefore no move
+                return
+            elif(piece.color is not player.color):
+                # piece doesn't belong to player so no move
+                return
+            # if neither return is hit then this is a moveable piece
+            # we now want to highlight available moves for player
 
-        - for each sublist we start at the beginning and go until space occupied - something like:
+            # first get list of sublists containing valid piece moves based on position and piece type
+            # maybe pass in position from square - maybe piece doesn't need to know about position - instead we have squares be aware of position and occupant - piece just knows it's moves, color, name
+            valid_piece_moves = piece.get_valid_piece_moves(?squarePos?)
+
+            # then determine valid_board_moves using valid_piece_moves and board knowledge
+            - for each sublist we start at the beginning and go until space occupied - something like:
+
             valid_board_moves = []
-            # this accesses each sublist
+            # this for loop accesses each sublist
             for i in range(len(valid_piece_moves)):
                 sublist = valid_piece_moves[i]
                 j = 0
@@ -163,17 +177,20 @@ class Board:
                 while not self.squares[x][y].is_occupied:
                     valid_board_moves.append(sublist[j])
                     j += 1
+                # when it kicks out of while loop, that means square at that position is occupied
+                # we need to check the occupant: access occupant with self.square[x][y].occupant - this returns the specific piece instance on that square. We can then access color
+                # if color is different, that move is valid
+                # later on we can add a check for if the piece is king to change check status
+                if self.squares[x][y].occupant.color != piece.color:
+                    valid_board_moves.append(sublist[j])
+                    if self.square[x][y].occupant.name == 'King':
+                        # change check status
+                        pass
+            # at end of looping we return the valid_board_moves list
+            # based on this list we will highlight valid squares
+            return valid_board_moves
 
-        - ***SEE BELOW: based on get_piece_moves return value, the board then checks squares at those positions and filters moves
-            - if is_occupied and occupant color is the same as current piece then that move is invalid
-            -
 
-
-        - I think for each Piece type we want a method that returns possible moves in a list of sublists (with no board knowledge).
-            - each sublist is possible moves going in one direction, starting from piece position to the end of the board
-            - in that way if we find that a space is occupied midway through the sublist we can slice the list at that point and remove moves beyond.
-            - we can do that operation on each sublist (for all but knight piece)
-            - end result will be possible moves
         """
 
 

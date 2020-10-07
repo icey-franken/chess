@@ -11,6 +11,9 @@ class Square:
         self._occupant = occupant
         self._name = self.get_square_name_from_pos()
 
+# define static method on square class that will determine square position based on a square.name input - this position will then be used in the board class to access the square instance from board.squares
+
+
     # no reason to have setter/deleter for square position - will never change
     @property
     def pos(self):
