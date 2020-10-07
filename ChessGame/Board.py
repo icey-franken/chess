@@ -81,8 +81,8 @@ class Board:
             white_rook_1=Rook((0, 0), 'White'),
             white_knight_1=Knight((1, 0), 'White'),
             white_bishop_1=Bishop((2, 0), 'White'),
-            white_king=King((3, 0), 'White'),
-            white_queen=Queen((4, 0), 'White'),
+            white_queen=Queen((3, 0), 'White'),
+            white_king=King((4, 0), 'White'),
             white_bishop_2=Bishop((5, 0), 'White'),
             white_knight_2=Knight((6, 0), 'White'),
             white_rook_2=Rook((7, 0), 'White'),
@@ -100,8 +100,8 @@ class Board:
             black_rook_1=Rook((0, 7), 'Black'),
             black_knight_1=Knight((1, 7), 'Black'),
             black_bishop_1=Bishop((2, 7), 'Black'),
-            black_king=King((3, 7), 'Black'),
-            black_queen=Queen((4, 7), 'Black'),
+            black_queen=Queen((3, 7), 'Black'),
+            black_king=King((4, 7), 'Black'),
             black_bishop_2=Bishop((5, 7), 'Black'),
             black_knight_2=Knight((6, 7), 'Black'),
             black_rook_2=Rook((7, 7), 'Black'),
@@ -151,11 +151,23 @@ class Board:
 #####################################################################
 newBoard = Board()
 newBoard.make_board()
-# logging.info(newBoard)
+logging.info(newBoard)
 newBoard.add_pieces_for_new_game()
-logging.info(newBoard.white_pieces)
-# logging.info(newBoard.white_pieces['white_rook_1'].get_position())
+# logging.info(newBoard.white_pieces)
+whiteKingStartPos = newBoard.white_pieces['white_king'].get_position()
+blackKingStartPos = newBoard.black_pieces['black_king'].get_position()
+
+
+logging.info(whiteKingStartPos)
+# logging.info(newBoard.white_pieces['white_king'].get_square_name_from_pos())
+whiteKingSq = newBoard._squares[whiteKingStartPos[0]][whiteKingStartPos[1]]
+logging.info(f'white king square name: {whiteKingSq.get_square_name_from_pos()}')
+blackKingSq = newBoard._squares[blackKingStartPos[0]][blackKingStartPos[1]]
+logging.info(f'black king square name: {blackKingSq.get_square_name_from_pos()}')
+
+
 sq = newBoard._squares[0][0]
+logging.info(f'board coords {sq.get_square_name_from_pos()}')
 dummyPiece = Pawn((0, 0), 'White')
 logging.info(f'piece info: {dummyPiece}')
 logging.info(f'square info: {sq}')
