@@ -11,11 +11,13 @@
 #             - end result will be possible moves
 
 class Piece:
-    def __init__(self, color, is_captured=False, name=None):
+    def __init__(self, color, is_captured=False):  # , name=None):
         # self._position = position
         self._color = color
         self._is_captured = is_captured
-        self._name = name
+        self._name = self.__class__.__name__
+
+        # self._name = name
 
     @property
     def color(self):
@@ -62,4 +64,5 @@ class Piece:
             self._is_captured = captured_boolean
 
     def __repr__(self):
-        return f'[{self.color} {self.name} - captured: {self.is_captured}]'
+        cap_str = 'CAPTURED' if self.is_captured else 'NOT captured'
+        return f'[{self.color} {self.name}-{cap_str}]'

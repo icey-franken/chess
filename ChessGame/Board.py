@@ -175,7 +175,7 @@ class Board:
         squares[6][1].occupant = whites['white_pawn_7']
         squares[7][1].occupant = whites['white_pawn_8']
 
-        squares[0][7].occupant = blacks['black_rook_1']
+        squares[1][3].occupant = blacks['black_rook_1']
         squares[1][7].occupant = blacks['black_knight_1']
         squares[2][7].occupant = blacks['black_bishop_1']
         squares[3][7].occupant = blacks['black_queen']
@@ -203,29 +203,9 @@ class Board:
             for j in range(len(column)):
                 column[j].occupant = None
 
-    def get_valid_pawn_attack_moves(self, position, pawn_color):
-        valid_pawn_attack_moves = []
-        row_change = 1 if pawn_color == 'White' else -1
+    def on_board(self, position):
         column, row = position
-        adj_row = row + row_change
-        col_to_left = column - 1
-        col_to_right = column + 1
-        # check that adj_row is on board
-        if adj_row >= 0 and adj_row <= 7:
-            # check that col_to_left on board
-            if col_to_left >= 0:
-                # check if an opposing piece occupies that square
-                left_pos = (col_to_left, adj_row)
-                left_square = self.get_square(left_pos)
-                print(left_square.is_occupied())
-                if left_square.is_occupied() and left_square.occupant.color != pawn_color:
-                    valid_pawn_attack_moves.append(left_pos)
-            if col_to_right <= 7:
-                right_pos = (col_to_right, adj_row)
-                right_square = self.get_square(right_pos)
-                if right_square.is_occupied() and right_square.occupant.color != pawn_color:
-                    valid_pawn_attack_moves.append(right_pos)
-        return valid_pawn_attack_moves
+        return column >= 0 and column <=7 and row >= 0 and row <= 7
 
     def get_valid_board_moves(self, position):
         """
@@ -282,35 +262,9 @@ class Board:
         elif piece.color is not player_color:
             print('this is not your piece to move')
             return
-        # if neither of the above returns are hit, then we need to calc valid board moves
-        valid_board_moves = []
-        # SPECIAL CASE - if piece is a pawn we immediately add to valid_board_moves
-        # we do this without talking to pawn because pawn class knows nothing about the board
-        if piece.name == 'Pawn':
-            pawn_attack_moves = self.get_valid_pawn_attack_moves(position, piece.color)
-            valid_board_moves += pawn_attack_moves
+        valid_piece_moves = piece.get_valid_piece_moves(position, self)
+        return valid_piece_moves
 
-        valid_piece_moves = piece.get_valid_piece_moves(position)
-        # this for loop accesses each sublist in valid_piece_moves
-        for i in range(len(valid_piece_moves)):
-            sublist = valid_piece_moves[i]
-            for j in range(len(sublist)):
-                x, y = sublist[j]
-                square = self.squares[x][y]
-                # if square is empty, then that's a valid move
-                if not square.is_occupied():
-                    valid_board_moves.append(sublist[j])
-                else:
-                    # if a square is occupied and its a different color, we want to add that move and then break
-                    # EXCEPT if the piece is a pawn, because pawns can only attack diagonally
-                    if square.occupant.color != piece.color and piece.name != 'Pawn':
-                        valid_board_moves.append(sublist[j])
-                        # we know that square is occupied by piece of opposite color - we want to check if that piece is a king, and if so add a "player_in_check=True" or something property
-                        if square.occupant.name == 'King':
-                            # change check status
-                            pass
-                    break  # in either case we want to break out of the sublist for loop after we hit the first occupied space
-        return valid_board_moves
 
     def __repr__(self):
         boardStr = ''
@@ -343,9 +297,13 @@ square = newBoard.get_square(position)
 logging.info(f'white pawn square: {square}')
 piece = square.occupant
 logging.info(f'square 0 1 piece: {piece}')
-logging.info(f'piece name: {piece.name}')
-logging.info(f'valid piece moves: {piece.get_valid_piece_moves(position)}')
+# logging.info(f'piece name: {piece.name}')
+logging.info(f'valid piece moves: {piece.get_valid_piece_moves(position, newBoard)}')
 logging.info(f'valid board moves: {newBoard.get_valid_board_moves(position)}')
+
+print(piece.name)
+print(piece.color)
+
 
 
 # logging.info(newBoard.squares)
