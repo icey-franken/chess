@@ -27,6 +27,37 @@ class Piece:
     def name(self):
         return self._name
 
+    def _get_moves_in_dir(self, position, board, col_inc, row_inc, max_count=7):
+        """
+        This method calculates all moves in a straight line
+        col_inc and row_inc should be +1, 0, or -1 for rook, knight, bishop, and queen
+        straight lines with only one of col_inc or row_inc non-zero
+        diagonal lines with both non-zero
+        for king we can calculate moves with max_count = 1
+
+        """
+        moves_list = []
+        column, row = position
+        next_col = column + col_inc
+        next_row = row + row_inc
+        next_pos = (next_col, next_row)
+        count = 0
+        while board.on_board(next_pos) and count < max_count:
+            # next_pos = (next_col, row)
+            # if next square is empty then move valid
+            square = board.get_square(next_pos)
+            if square.is_open():
+                moves_list.append(next_pos)
+            else:
+                if square.occupant.color != self.color:
+                    moves_list.append(next_pos)
+                break
+            next_col += col_inc
+            next_row += row_inc
+            next_pos = (next_col, next_row)
+            count += 1
+        return moves_list
+
     # @property
     # def position(self):
     #     return self._position

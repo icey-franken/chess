@@ -87,6 +87,9 @@ class Square:
     def is_occupied(self):
         return self.occupant is not None
 
+    def is_open(self):
+        return self.occupant is None
+
 
 
 

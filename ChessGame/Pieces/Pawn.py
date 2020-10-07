@@ -5,13 +5,52 @@ class Pawn(Piece.Piece):
     # def __init__(self, color,  is_captured=False):
     # super().__init__(color, is_captured)
 
-    def get_valid_piece_moves(self, position, board):
-        # for pawns, color matters - white can only move "up" and black can only move "down"
-        # valid piece moves assume board is empty - purely piece logic
-        # for white pawns, if row is 1 then it has not moved - can move 'up' 1 or 2 rows
-        # for black pawns same deal but row 6 and down
-        # pawns can only change columns if there is a piece - this will be more complex logic to implement later
-        #
+    def get_valid_moves(self, position, board):
+        """OLD - SAVED JUST IN CASE
+            - this method takes in a position
+            - when user clicks a square we check if it is their turn and the piece belongs to them based on square.occupant property
+            square = self.get_square(position)
+            piece = square.occupant
+            if piece is None:
+                print('this square is empty')
+                return
+            elif piece.color is not player.color:
+                print('this is not your piece to move')
+                return
+
+            - if neither return is hit then this is a moveable piece
+            - we now want to highlight available moves for player
+            - first get list of sublists containing valid piece moves based on position and piece type
+                - we assume here that piece knows nothing of position
+            valid_piece_moves = piece.get_valid_piece_moves(position)
+            - determine valid_board_moves using valid_piece_moves and board knowledge
+                - for each sublist in valid_piece_moves we start at the beginning and go until space occupied - something like:
+
+            valid_board_moves = []
+            # this for loop accesses each sublist
+            for i in range(len(valid_piece_moves)):
+                sublist = valid_piece_moves[i]
+                j = 0
+                !!!make sure to access square based on position given in sublist
+                x, y = sublist[j] # this should be a x, y tuple
+                while not self.squares[x][y].is_occupied:
+                    valid_board_moves.append(sublist[j])
+                    j += 1
+                - when it kicks out of while loop, that means square at that position is occupied
+                - we need to check the occupant: access occupant with self.square[x][y].occupant - this returns the specific piece instance on that square. We can then access color
+                - if color is different, that move is valid
+                - later on we can add a check for if the piece is king to change check status
+                - this will work just fine for knight class as long as we put each move in it's own sublist!
+                if self.squares[x][y].occupant.color != piece.color:
+                    valid_board_moves.append(sublist[j])
+                    if self.square[x][y].occupant.name == 'King':
+                        # change check status
+                        pass
+            # at end of looping we return the valid_board_moves list
+            # based on this list we will highlight valid squares
+            return valid_board_moves
+        """
+
         valid_moves_list = []  # remember - this is a list of sublists for each direction
         # pawns only have one direction (without attacking diagonals) and therefore one sublist but we still need nested form
         column, row = position
@@ -23,14 +62,14 @@ class Pawn(Piece.Piece):
             row_inc = -1
         # pawns can always move one row if space open
         next_row = row + row_inc
-        is_open = not board.get_square((column, next_row)).is_occupied()
+        is_open = board.get_square((column, next_row)).is_open()
         if next_row <= 7 and next_row >= 0 and is_open:
             valid_moves_list.append((column, next_row))
             # if first move, pawn can also move up two rows
             # we only do this check if first check satisfied
             # i.e. next row unoccupied
             next_row = row + 2 * row_inc
-            is_open = not board.get_square((column, next_row)).is_occupied()
+            is_open = board.get_square((column, next_row)).is_open()
             if start_row == row and is_open:
                 valid_moves_list.append((column, next_row))
         # valid_moves_list.append(valid_moves_sublist)
