@@ -47,11 +47,11 @@ class Board:
     def make_board(self):
         new_squares = []
         for x in range(8):
-            row = []
+            column = []
             for y in range(8):
                 square = Square(x, y)
-                row.append(square)
-            new_squares.append(row)
+                column.append(square)
+            new_squares.append(column)
         self.squares = new_squares
 
     @property
@@ -63,7 +63,7 @@ class Board:
         self._squares = new_squares
 
     def get_square(self, position):
-        x, y = position #position is a tuple of x, y coords
+        x, y = position  # position is a tuple of x, y coords
         return self.squares[x][y]
 
     @property
@@ -106,41 +106,41 @@ class Board:
         # Haven't decided if a piece needs to know about position - for now we include but I may remove in the future
 
         white_pieces = dict(
-            white_rook_1=Rook((0, 0), 'White'),
-            white_knight_1=Knight((1, 0), 'White'),
-            white_bishop_1=Bishop((2, 0), 'White'),
-            white_queen=Queen((3, 0), 'White'),
-            white_king=King((4, 0), 'White'),
-            white_bishop_2=Bishop((5, 0), 'White'),
-            white_knight_2=Knight((6, 0), 'White'),
-            white_rook_2=Rook((7, 0), 'White'),
-            white_pawn_1=Pawn((0, 1), 'White'),
-            white_pawn_2=Pawn((1, 1), 'White'),
-            white_pawn_3=Pawn((2, 1), 'White'),
-            white_pawn_4=Pawn((3, 1), 'White'),
-            white_pawn_5=Pawn((4, 1), 'White'),
-            white_pawn_6=Pawn((5, 1), 'White'),
-            white_pawn_7=Pawn((6, 1), 'White'),
-            white_pawn_8=Pawn((7, 1), 'White'),
+            white_rook_1=Rook('White'),
+            white_knight_1=Knight('White'),
+            white_bishop_1=Bishop('White'),
+            white_queen=Queen('White'),
+            white_king=King('White'),
+            white_bishop_2=Bishop('White'),
+            white_knight_2=Knight('White'),
+            white_rook_2=Rook('White'),
+            white_pawn_1=Pawn('White'),
+            white_pawn_2=Pawn('White'),
+            white_pawn_3=Pawn('White'),
+            white_pawn_4=Pawn('White'),
+            white_pawn_5=Pawn('White'),
+            white_pawn_6=Pawn('White'),
+            white_pawn_7=Pawn('White'),
+            white_pawn_8=Pawn('White'),
         )
 
         black_pieces = dict(
-            black_rook_1=Rook((0, 7), 'Black'),
-            black_knight_1=Knight((1, 7), 'Black'),
-            black_bishop_1=Bishop((2, 7), 'Black'),
-            black_queen=Queen((3, 7), 'Black'),
-            black_king=King((4, 7), 'Black'),
-            black_bishop_2=Bishop((5, 7), 'Black'),
-            black_knight_2=Knight((6, 7), 'Black'),
-            black_rook_2=Rook((7, 7), 'Black'),
-            black_pawn_1=Pawn((0, 6), 'Black'),
-            black_pawn_2=Pawn((1, 6), 'Black'),
-            black_pawn_3=Pawn((2, 6), 'Black'),
-            black_pawn_4=Pawn((3, 6), 'Black'),
-            black_pawn_5=Pawn((4, 6), 'Black'),
-            black_pawn_6=Pawn((5, 6), 'Black'),
-            black_pawn_7=Pawn((6, 6), 'Black'),
-            black_pawn_8=Pawn((7, 6), 'Black'),
+            black_rook_1=Rook('Black'),
+            black_knight_1=Knight('Black'),
+            black_bishop_1=Bishop('Black'),
+            black_queen=Queen('Black'),
+            black_king=King('Black'),
+            black_bishop_2=Bishop('Black'),
+            black_knight_2=Knight('Black'),
+            black_rook_2=Rook('Black'),
+            black_pawn_1=Pawn('Black'),
+            black_pawn_2=Pawn('Black'),
+            black_pawn_3=Pawn('Black'),
+            black_pawn_4=Pawn('Black'),
+            black_pawn_5=Pawn('Black'),
+            black_pawn_6=Pawn('Black'),
+            black_pawn_7=Pawn('Black'),
+            black_pawn_8=Pawn('Black'),
         )
         self.white_pieces = white_pieces
         self.black_pieces = black_pieces
@@ -199,9 +199,9 @@ class Board:
     def clear_board(self):
         squares = self.squares
         for i in range(len(squares)):
-            row = squares[i]
-            for j in range(len(row)):
-                row[j].occupant = None
+            column = squares[i]
+            for j in range(len(column)):
+                column[j].occupant = None
 
     def get_valid_board_moves(self, position):
         """
@@ -308,9 +308,15 @@ newBoard.make_board()
 logging.info(newBoard)
 newBoard.create_pieces_for_new_game()
 newBoard.set_pieces_for_new_game()
-logging.info(newBoard.squares)
-newBoard.clear_board()
-logging.info(newBoard.squares)
+square = newBoard.squares[0][1]
+logging.info(f'white pawn square: {square}')
+piece = square.occupant
+logging.info(f'square 0 1 piece: {piece}')
+logging.info(f'piece name: {piece.name}')
+
+# logging.info(newBoard.squares)
+# newBoard.clear_board()
+# logging.info(newBoard.squares)
 
 # logging.info(newBoard.white_pieces)
 # whiteKingStartPos = newBoard.white_pieces['white_king'].get_position()
@@ -326,21 +332,21 @@ logging.info(newBoard.squares)
 # logging.info(
 # f'black king square name: {blackKingSq.get_square_name_from_pos()}')
 
-sq = newBoard._squares[0][0]
-logging.info(f'board coords {sq.get_square_name_from_pos()}')
-dummyPiece = Pawn((0, 0), 'White')
-logging.info(f'piece info: {dummyPiece}')
-logging.info(f'square info: {sq}')
-logging.info(f'square 0 0 occ: {sq.occupant}')
-logging.info(f'square 0 0 is_occ: {sq.is_occupied()}')
+# sq = newBoard._squares[0][0]
+# logging.info(f'board coords {sq.get_square_name_from_pos()}')
+# dummyPiece = Pawn((0, 0), 'White')
+# logging.info(f'piece info: {dummyPiece}')
+# logging.info(f'square info: {sq}')
+# logging.info(f'square 0 0 occ: {sq.occupant}')
+# logging.info(f'square 0 0 is_occ: {sq.is_occupied()}')
 
-sq.occupant = dummyPiece
-logging.info(f'square 0 0 occ: {sq.occupant}')
-logging.info(f'square 0 0 is_occ: {sq.is_occupied()}')
-if sq.is_occupied():
-    logging.info(sq.occupant)
-    sq.occupant = None
-    logging.info(sq.occupant)
+# sq.occupant = dummyPiece
+# logging.info(f'square 0 0 occ: {sq.occupant}')
+# logging.info(f'square 0 0 is_occ: {sq.is_occupied()}')
+# if sq.is_occupied():
+#     logging.info(sq.occupant)
+#     sq.occupant = None
+#     logging.info(sq.occupant)
 
 
 """

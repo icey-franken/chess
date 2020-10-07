@@ -93,8 +93,9 @@ class Square:
 
     def __str__(self):
         color = 'White' if self.is_black is False else 'Black'
-        return f'Pos: {self._pos}, Color: {color}'
+        return f'''Pos: {self.pos}, Name: {self.name}, Color: {color}, Occupant: {self.occupant}'''
+
 
     def __repr__(self):
         color = 'White' if self.is_black is False else 'Black'
-        return f'Pos: {self._pos}, Color: {color}, Occupant: {self.occupant}'
+        return f'''Pos: {self.pos}, Name: {self.name}, Color: {color}, Occupant: {self.occupant}'''
