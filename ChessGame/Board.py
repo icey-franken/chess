@@ -248,7 +248,7 @@ class Board:
             # based on this list we will highlight valid squares
             return valid_board_moves
         """
-        # need to define player class
+        # need to define player class - use default of white for now
         player_color = 'White'
         square = self.get_square(position)
         piece = square.occupant
@@ -258,21 +258,26 @@ class Board:
         elif piece.color is not player_color:
             print('this is not your piece to move')
             return
-        valid_board_moves = []
         valid_piece_moves = piece.get_valid_piece_moves(position)
+        valid_board_moves = []
         # this for loop accesses each sublist in valid_piece_moves
         for i in range(len(valid_piece_moves)):
             sublist = valid_piece_moves[i]
-            j = 0
-            x, y = sublist[j] # this should be a x, y tuple
-            while not self.squares[x][y].is_occupied:
-                valid_board_moves.append(sublist[j])
-                j += 1
-            if self.squares[x][y].occupant.color != piece.color:
-                valid_board_moves.append(sublist[j])
-                if self.square[x][y].occupant.name == 'King':
-                    # change check status
-                    pass
+            for j in range(len(sublist)):
+                x, y = sublist[j]
+                square = self.squares[x][y]
+                # if square is empty, then that's a valid move
+                if not square.is_occupied:
+                    valid_board_moves.append(sublist[j])
+                else:
+                    # if a square is occupied and its a different color, we want to add that move and then break
+                    if square.occupant.color != piece.color:
+                        valid_board_moves.append(sublist[j])
+                        # we know that square is occupied by piece of opposite color - we want to check if that piece is a king, and if so add a "player_in_check=True" or something property
+                        if square.occupant.name == 'King':
+                            # change check status
+                            pass
+                    break  # in either case we want to break out of the sublist for loop after we hit the first occupied space
         return valid_board_moves
 
 
