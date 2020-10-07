@@ -45,12 +45,26 @@ class Board:
         self._black_pieces = None
 
     def make_board(self):
+        new_squares = []
         for x in range(8):
             row = []
             for y in range(8):
                 square = Square(x, y)
                 row.append(square)
-            self._squares.append(row)
+            new_squares.append(row)
+        self.squares = new_squares
+
+    @property
+    def squares(self):
+        return self._squares
+
+    @squares.setter
+    def squares(self, new_squares):
+        self._squares = new_squares
+
+    def get_square(self, position):
+        x, y = position #position is a tuple of x, y coords
+        return self.squares[x][y]
 
     @property
     def white_pieces(self):
@@ -80,7 +94,7 @@ class Board:
     #     else:
     #         print('piece not in black_pieces')
 
-    def add_pieces_for_new_game(self):
+    def create_pieces_for_new_game(self):
         """
         instantiates class object for each piece type
         sets piece in corresponding start position
@@ -88,6 +102,8 @@ class Board:
         black occupies rows 7 and 8
         """
         # maybe we don't even want to do this - what we really want to do is assign pieces as occupants of corresponding squares
+
+        # Haven't decided if a piece needs to know about position - for now we include but I may remove in the future
 
         white_pieces = dict(
             white_rook_1=Rook((0, 0), 'White'),
@@ -137,35 +153,76 @@ class Board:
         # for piece in white_pieces.keys():
         #     logging.info(white_pieces[piece])
 
+    def set_pieces_for_new_game(self):
+        squares = self.squares
+        whites = self.white_pieces
+        blacks = self.black_pieces
+        squares[0][0].occupant = whites['white_rook_1']
+        squares[1][0].occupant = whites['white_knight_1']
+        squares[2][0].occupant = whites['white_bishop_1']
+        squares[3][0].occupant = whites['white_queen']
+        squares[4][0].occupant = whites['white_king']
+        squares[5][0].occupant = whites['white_bishop_2']
+        squares[6][0].occupant = whites['white_knight_2']
+        squares[7][0].occupant = whites['white_rook_2']
+
+        squares[0][1].occupant = whites['white_pawn_1']
+        squares[1][1].occupant = whites['white_pawn_2']
+        squares[2][1].occupant = whites['white_pawn_3']
+        squares[3][1].occupant = whites['white_pawn_4']
+        squares[4][1].occupant = whites['white_pawn_5']
+        squares[5][1].occupant = whites['white_pawn_6']
+        squares[6][1].occupant = whites['white_pawn_7']
+        squares[7][1].occupant = whites['white_pawn_8']
+
+        squares[0][7].occupant = blacks['black_rook_1']
+        squares[1][7].occupant = blacks['black_knight_1']
+        squares[2][7].occupant = blacks['black_bishop_1']
+        squares[3][7].occupant = blacks['black_queen']
+        squares[4][7].occupant = blacks['black_king']
+        squares[5][7].occupant = blacks['black_bishop_2']
+        squares[6][7].occupant = blacks['black_knight_2']
+        squares[7][7].occupant = blacks['black_rook_2']
+
+        squares[0][6].occupant = blacks['black_pawn_1']
+        squares[1][6].occupant = blacks['black_pawn_2']
+        squares[2][6].occupant = blacks['black_pawn_3']
+        squares[3][6].occupant = blacks['black_pawn_4']
+        squares[4][6].occupant = blacks['black_pawn_5']
+        squares[5][6].occupant = blacks['black_pawn_6']
+        squares[6][6].occupant = blacks['black_pawn_7']
+        squares[7][6].occupant = blacks['black_pawn_8']
+
+    # def uncapture_all_pieces_for_new_game(self):
+        # pass
+
     def clear_board(self):
-        pass
+        squares = self.squares
+        for i in range(len(squares)):
+            row = squares[i]
+            for j in range(len(row)):
+                row[j].occupant = None
 
-    def get_valid_board_moves(self, piece_to_move):
+    def get_valid_board_moves(self, position):
         """
-        - this method takes in a particular piece
-        - when user clicks a square we check if it is their turn and the piece belongs to them based on square.occupant property
-
-        <square id={square.name} onClick={handleClick} />
-        const handleClick = (e) => {
-            squareName = e.target.id
-            squarePos = Square.get_pos_from_square_name(squareName)
-            square = Board.getSquare(squarePos)
+            - this method takes in a position
+            - when user clicks a square we check if it is their turn and the piece belongs to them based on square.occupant property
+            square = self.get_square(position)
             piece = square.occupant
-            if(piece is None):
-                # no piece in square therefore no move
+            if piece is None:
+                print('this square is empty')
                 return
-            elif(piece.color is not player.color):
-                # piece doesn't belong to player so no move
+            elif piece.color is not player.color:
+                print('this is not your piece to move')
                 return
-            # if neither return is hit then this is a moveable piece
-            # we now want to highlight available moves for player
 
-            # first get list of sublists containing valid piece moves based on position and piece type
-            # maybe pass in position from square - maybe piece doesn't need to know about position - instead we have squares be aware of position and occupant - piece just knows it's moves, color, name
-            valid_piece_moves = piece.get_valid_piece_moves(?squarePos?)
-
-            # then determine valid_board_moves using valid_piece_moves and board knowledge
-            - for each sublist we start at the beginning and go until space occupied - something like:
+            - if neither return is hit then this is a moveable piece
+            - we now want to highlight available moves for player
+            - first get list of sublists containing valid piece moves based on position and piece type
+                - we assume here that piece knows nothing of position
+            valid_piece_moves = piece.get_valid_piece_moves(position)
+            - determine valid_board_moves using valid_piece_moves and board knowledge
+                - for each sublist in valid_piece_moves we start at the beginning and go until space occupied - something like:
 
             valid_board_moves = []
             # this for loop accesses each sublist
@@ -177,10 +234,11 @@ class Board:
                 while not self.squares[x][y].is_occupied:
                     valid_board_moves.append(sublist[j])
                     j += 1
-                # when it kicks out of while loop, that means square at that position is occupied
-                # we need to check the occupant: access occupant with self.square[x][y].occupant - this returns the specific piece instance on that square. We can then access color
-                # if color is different, that move is valid
-                # later on we can add a check for if the piece is king to change check status
+                - when it kicks out of while loop, that means square at that position is occupied
+                - we need to check the occupant: access occupant with self.square[x][y].occupant - this returns the specific piece instance on that square. We can then access color
+                - if color is different, that move is valid
+                - later on we can add a check for if the piece is king to change check status
+                - this will work just fine for knight class as long as we put each move in it's own sublist!
                 if self.squares[x][y].occupant.color != piece.color:
                     valid_board_moves.append(sublist[j])
                     if self.square[x][y].occupant.name == 'King':
@@ -189,9 +247,33 @@ class Board:
             # at end of looping we return the valid_board_moves list
             # based on this list we will highlight valid squares
             return valid_board_moves
-
-
         """
+        # need to define player class
+        player_color = 'White'
+        square = self.get_square(position)
+        piece = square.occupant
+        if piece is None:
+            print('this square is empty')
+            return
+        elif piece.color is not player_color:
+            print('this is not your piece to move')
+            return
+        valid_board_moves = []
+        valid_piece_moves = piece.get_valid_piece_moves(position)
+        # this for loop accesses each sublist in valid_piece_moves
+        for i in range(len(valid_piece_moves)):
+            sublist = valid_piece_moves[i]
+            j = 0
+            x, y = sublist[j] # this should be a x, y tuple
+            while not self.squares[x][y].is_occupied:
+                valid_board_moves.append(sublist[j])
+                j += 1
+            if self.squares[x][y].occupant.color != piece.color:
+                valid_board_moves.append(sublist[j])
+                if self.square[x][y].occupant.name == 'King':
+                    # change check status
+                    pass
+        return valid_board_moves
 
 
 
@@ -219,7 +301,12 @@ class Board:
 newBoard = Board()
 newBoard.make_board()
 logging.info(newBoard)
-newBoard.add_pieces_for_new_game()
+newBoard.create_pieces_for_new_game()
+newBoard.set_pieces_for_new_game()
+logging.info(newBoard.squares)
+newBoard.clear_board()
+logging.info(newBoard.squares)
+
 # logging.info(newBoard.white_pieces)
 # whiteKingStartPos = newBoard.white_pieces['white_king'].get_position()
 # blackKingStartPos = newBoard.black_pieces['black_king'].get_position()
