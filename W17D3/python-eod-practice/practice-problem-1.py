@@ -11,7 +11,7 @@
 
 # WRITE YOUR FUNCTION HERE
 def lower_map(lst):
-    pass
+    return list(map(lambda string: string.lower(), lst))
 
 # TEST DATA
 test = ["PLOP", "", "DROP", "ZOP", "STOP"]
