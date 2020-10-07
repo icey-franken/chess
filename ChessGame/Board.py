@@ -57,7 +57,7 @@ class Board:
         return self._white_pieces
 
     @white_pieces.setter
-    # eventually we can put a validation here that game is over/forfeited/whatever
+    # eventually we can put a validation here that game is over/forfeited
     def white_pieces(self, white_pieces):
         self._white_pieces = white_pieces
         # return self.white_pieces()
@@ -69,6 +69,16 @@ class Board:
     @black_pieces.setter
     def black_pieces(self, black_pieces):
         self._black_pieces = black_pieces
+
+    # on second thought - we don't want to delete pieces!
+    # instead we want to change their is_captured attribute!
+    # @black_pieces.deleter
+    # def black_pieces(self, removed_piece):
+    #     print(removed_piece)
+    #     if removed_piece in self.black_pieces:
+    #         del self._black_pieces[removed_piece]
+    #     else:
+    #         print('piece not in black_pieces')
 
     def add_pieces_for_new_game(self):
         """
@@ -117,7 +127,7 @@ class Board:
         self.white_pieces = white_pieces
         self.black_pieces = black_pieces
         # ** is called 'splat' - similar to spread in JS
-        all_pieces = dict(**white_pieces, **black_pieces)
+        # all_pieces = dict(**white_pieces, **black_pieces)
         # for piece in all_pieces.keys():
         #     logging.info(all_pieces[piece])
         # for piece in black_pieces.keys():
@@ -154,17 +164,18 @@ newBoard.make_board()
 logging.info(newBoard)
 newBoard.add_pieces_for_new_game()
 # logging.info(newBoard.white_pieces)
-whiteKingStartPos = newBoard.white_pieces['white_king'].get_position()
-blackKingStartPos = newBoard.black_pieces['black_king'].get_position()
+# whiteKingStartPos = newBoard.white_pieces['white_king'].get_position()
+# blackKingStartPos = newBoard.black_pieces['black_king'].get_position()
 
 
-logging.info(whiteKingStartPos)
+# logging.info(whiteKingStartPos)
 # logging.info(newBoard.white_pieces['white_king'].get_square_name_from_pos())
-whiteKingSq = newBoard._squares[whiteKingStartPos[0]][whiteKingStartPos[1]]
-logging.info(f'white king square name: {whiteKingSq.get_square_name_from_pos()}')
-blackKingSq = newBoard._squares[blackKingStartPos[0]][blackKingStartPos[1]]
-logging.info(f'black king square name: {blackKingSq.get_square_name_from_pos()}')
-
+# whiteKingSq = newBoard._squares[whiteKingStartPos[0]][whiteKingStartPos[1]]
+# logging.info(
+# f'white king square name: {whiteKingSq.get_square_name_from_pos()}')
+# blackKingSq = newBoard._squares[blackKingStartPos[0]][blackKingStartPos[1]]
+# logging.info(
+# f'black king square name: {blackKingSq.get_square_name_from_pos()}')
 
 sq = newBoard._squares[0][0]
 logging.info(f'board coords {sq.get_square_name_from_pos()}')
