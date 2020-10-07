@@ -60,3 +60,6 @@ class Piece:
                 print('Piece is already ... not captured!')
         else:
             self._is_captured = captured_boolean
+
+    def __repr__(self):
+        return f'[{self.color} {self.name} - captured: {self.is_captured}]'
