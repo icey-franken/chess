@@ -46,9 +46,9 @@ class Board:
 
     def make_board(self):
         new_squares = []
-        for x in range(8):
+        for y in range(8):
             column = []
-            for y in range(8):
+            for x in range(8):
                 square = Square(x, y)
                 column.append(square)
             new_squares.append(column)
@@ -225,74 +225,77 @@ class Board:
         valid_moves = piece.get_valid_moves(position, self)
         return valid_moves
 
-    def __repr__(self):
-        boardStr = ''
-        endStr = '''
- |_________________________________________________________________________
-       a        b        c        d        e        f        g        h       '''
-        for i in range(len(self.squares)-1, -1, -1):
-            rowStr = f''' |
- |
-{i+1}|
- |
- |'''
-            row = self._squares[i]
-            for j in range(len(row)):
-                square = row[j]
-                color = 'W'
-                if square.is_black:
-                    color = 'B'
-                rowStr += f'    {color}    '
-            boardStr += f'''
-{rowStr}'''
-        return boardStr + endStr
+#     def __repr__(self):
+#         boardStr = ''
+#         endStr = '''
+#  |_________________________________________________________________________
+#        a        b        c        d        e        f        g        h       '''
+#         for i in range(len(self.squares)-1, -1, -1):
+#             rowStr = f''' |
+#  |
+# {i+1}|
+#  |
+#  |'''
+#             row = self._squares[i]
+#             for j in range(len(row)):
+#                 square = row[j]
+#                 color = 'W'
+#                 if square.is_black:
+#                     color = 'B'
+#                 rowStr += f'    {color}    '
+#             boardStr += f'''
+# {rowStr}'''
+#         return boardStr + endStr
 
 
     def __repr__(self):
-        def make_square(occupant):
-            square = '''
 
+        startRowStr = '''
+  _________________________________________________________________________________________'''
+        endRowStr = '''
+      a          b          c          d           e          f          g          h     '''
 
-            '''
+        def make_row(x, row_num):
+            row = f'''
+  |          |          |          |          |          |          |          |          |
+  |          |          |          |          |          |          |          |          |
+{row_num} |    {x[0]}    |    {x[1]}    |    {x[2]}    |    {x[3]}    |    {x[4]}    |    {x[5]}    |    {x[6]}    |    {x[7]}    |
+  |          |          |          |          |          |          |          |          |
+  |__________|__________|__________|__________|__________|__________|__________|__________|'''
+            return row
 
-        boardStr = ''
-        endStr = '''
- |_________________________________________________________________________
-       a        b        c        d        e        f        g        h       '''
-        for i in range(len(self.squares)-1, -1, -1):
-            rowStr = f''' |
- |
-{i+1}|
- |
- |'''
+        rowStr=''
+        transposed_board = [[], [], [], [], [], [], [], []]
+        for i in range(len(self.squares)):
             row = self.squares[i]
             for j in range(len(row)):
-                square = row[j]
-                occupant = 'X'
-                piece = square.occupant
-                if piece is not None:
-                    occupant = 'piece'
-                rowStr += make_square(occupant)
-        return boardStr + endStr
+                col_item = 'xx' if row[j].occupant is None else row[j].occupant
+                transposed_board[j].append(col_item)
+                # col.append(col_item)
+        for i in range(len(transposed_board), 0, -1):
+            row = transposed_board[i-1]
+            occupants = [row[j] for j in range(len(row))]
+            rowStr += make_row(occupants, i)
+        return startRowStr+rowStr+endRowStr
 
     #################################################################
 newBoard = Board()
 newBoard.make_board()
-logging.info(newBoard)
 newBoard.create_pieces_for_new_game()
 newBoard.set_pieces_for_new_game()
-position = (1, 0)
-square = newBoard.get_square(position)
-piece = square.occupant
-logging.info(f'square: {square} piece: {piece}')
-# logging.info(f'piece name: {piece.name}')
+logging.info(newBoard)
+# position = (1, 0)
+# square = newBoard.get_square(position)
+# piece = square.occupant
+# logging.info(f'square: {square} piece: {piece}')
+# # logging.info(f'piece name: {piece.name}')
+# # logging.info(
+#     # f'valid piece moves: {piece.get_valid_moves(position, newBoard)}')
 # logging.info(
-    # f'valid piece moves: {piece.get_valid_moves(position, newBoard)}')
-logging.info(
-    f'valid board moves: {newBoard.get_valid_moves(position)}')
+#     f'valid board moves: {newBoard.get_valid_moves(position)}')
 
-print(piece.name)
-print(piece.color)
+# print(piece.name)
+# print(piece.color)
 
 # logging.info(newBoard.squares)
 # newBoard.clear_board()

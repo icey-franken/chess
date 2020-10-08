@@ -83,6 +83,11 @@ class Piece:
             count += 1
         return moves_list
 
+    def __str__(self):
+        color_str = 'W' if self.color == 'White' else 'B'
+        piece_str = self.name[0] if self.name != 'King' else '*'
+        return f'{color_str}{piece_str}'
+
     def __repr__(self):
         cap_str = 'CAPTURED' if self.is_captured else 'NOT captured'
         return f'[{self.color} {self.name}-{cap_str}]'
