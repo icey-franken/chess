@@ -70,17 +70,14 @@ class Game():
 
     def start_turn_sequence(self):
         print(self.board)
-        player_name = self.white_player.name
-        opponent_name = self.black_player.name
-        if self.turn == 'Black':
-            player_name = self.black_player.name
-            opponent_name = self.white_player.name
+        player = self.white_player if self.turn == 'White' else self.black_player
+        opponent = self.black_player if self.turn =='White' else self.white_player
         file_rank = '--'
         piece_pos = None
         piece = None
         valid_move_pos_list = None
         while piece_pos is None or piece is None:
-            file_rank = input(f'''Player {player_name}
+            file_rank = input(f'''Player {player.name}
     Enter a piece to move by file and rank: ''')
             piece_pos = self.board.translate_file_rank_to_col_row(file_rank)
             piece = self.board.is_valid_piece_selection(piece_pos, self.turn)
@@ -89,30 +86,47 @@ class Game():
                 if len(valid_move_pos_list) == 0:
                     piece = None
                     print('No available moves for that piece.')
-        move_file_rank = None
-        is_valid = False
-        valid_file_ranks = [self.board.translate_col_row_to_file_rank(pos)
-                            for pos in valid_move_pos_list]
-        valid_file_ranks_str = ''
-        for file_rank_opt in valid_file_ranks:
-            valid_file_ranks_str += file_rank_opt + ' '
-        while is_valid is False:
-            move_file_rank = input(f'''{player_name}'s turn
-    Enter the file and rank of where you want to move your {piece.name}.
-        Piece currently at: {file_rank}
-        Possible moves are: {valid_file_ranks_str}
-        Selected move: ''')
-            if move_file_rank in valid_file_ranks:
-                is_valid = True
-                # move piece
-                move_pos = self.board.translate_file_rank_to_col_row(move_file_rank)
-                captured_piece = self.board.move_piece(piece_pos, move_pos)
-                if captured_piece is not None:
-                    print(f'''    You captured {opponent_name}\'s {captured_piece.name}''')
-
+                    continue
             else:
-                print('''That is not a valid move - try again
-                ''')
+                continue  # if piece IS none, then is_valid_piece_selection returned none
+                # that means we want to give them another chance to enter a piece
+            move_file_rank = None
+            valid_file_ranks = [self.board.translate_col_row_to_file_rank(pos)
+                                for pos in valid_move_pos_list]
+            valid_file_ranks_str = ''
+            for file_rank_opt in valid_file_ranks:
+                valid_file_ranks_str += file_rank_opt + ' '
+            while True:
+                move_file_rank = input(f'''{player.name}'s turn
+        Enter the file and rank of where you want to move your {piece.name}.
+            Piece currently at: {file_rank}
+            Possible moves are: {valid_file_ranks_str}
+            Selected move: ''')
+                if move_file_rank in valid_file_ranks:
+                    move_pos = self.board.translate_file_rank_to_col_row(move_file_rank)
+                    # check that self not put in check with selected move
+                    # logging.info(self.board.king_in_check(player.color, ))
+                    king_pos = move_pos if piece.name == 'King' else None
+                    if self.board.king_in_check(player.color, king_pos=king_pos):
+                        print('''    You cannot put your own King in check - try again.
+                        ''')
+                        piece = None
+                        break
+                    # move_piece method moves piece at piece_pos to move_pos
+                    # if space was previously occupied it returns the captured piece;
+                    # otherwise it returns none
+                    captured_piece = self.board.move_piece(piece_pos, move_pos)
+                    if captured_piece is not None:
+                        print(f'''    You captured {opponent.name}\'s {captured_piece.name}''')
+                    # before we finish player's turn, we check if the opponents king is in check
+                    if self.board.king_in_check(opponent.color):
+                        print(f'''    Heads up {opponent.name}! Your King is in check.
+            You next move must get your King out of check or you LOSE.''')
+                    break
+                else:
+                    print('''That is not a valid move - try again.
+                    ''')
+            continue
         # after every time a piece is moved, we need to check that moved piece's valid moves
         # if we check after every successful piece move, we will never miss it
         # variable move_pos holds the current position of the piece that was just moved.

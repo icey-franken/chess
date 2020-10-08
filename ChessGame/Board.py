@@ -273,6 +273,51 @@ class Board:
         move_square.occupant = piece
         return captured_piece
 
+    def get_king_pos(self, color):
+        for i in range(len(self.squares)):
+            row = self.squares[i]
+            for j in range(len(row)):
+                square = row[j]
+                piece = square.occupant
+                if piece is None:
+                    continue
+                elif piece.name == 'King' and piece.color == color:
+                    return square.pos
+
+    def king_in_check(self, color, king_pos = None):
+        # get the position of king for whatever input color was
+        # I know there are much more efficient ways to figure this out - but for now I will iterate through all squares and grab those with occupant.name of King
+        oppo_color = 'Black' if color == 'White' else 'White'
+
+        if king_pos is None:
+            king_pos = self.get_king_pos(color)
+
+        if king_pos is None:
+            print('error in king_in_check method in board.py line 291')
+        # we should have position of player's king
+        # now for ALL opponent pieces we need to see if that position if in valid_moves
+        # if so return True
+        oppo_moves_to_get_king = []  # maybe fill this out later
+        king_in_check = False
+        for i in range(len(self.squares)):
+            row = self.squares[i]
+            for j in range(len(row)):
+                square = row[j]
+                piece = square.occupant
+                if piece is None:
+                    continue
+                else:
+                    if piece.color == oppo_color:
+                        # this is an opponents piece - get valid moves
+                        oppo_piece_moves = self.get_valid_moves(square.pos, oppo_color)
+                        if king_pos in oppo_piece_moves:
+                            king_in_check = True
+                            return king_in_check  # return here because we dont need to keep looping
+        return king_in_check  # should always be false if it hit's here
+        # then check if that king's position is in the list returned from get_valid_moves for the opposing color
+        # if so return true
+        # otherwise return false
+
     def __repr__(self):
 
         startRowStr = '''
