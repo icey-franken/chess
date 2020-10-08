@@ -169,7 +169,7 @@ class Board:
         squares[0][1].occupant = whites['white_pawn_1']
         squares[1][1].occupant = whites['white_pawn_2']
         squares[2][1].occupant = whites['white_pawn_3']
-        # squares[3][1].occupant = whites['white_pawn_4']
+        squares[3][1].occupant = whites['white_pawn_4']
         squares[4][1].occupant = whites['white_pawn_5']
         squares[5][1].occupant = whites['white_pawn_6']
         squares[6][1].occupant = whites['white_pawn_7']
@@ -177,7 +177,7 @@ class Board:
 
         squares[0][7].occupant = blacks['black_rook_1']
         squares[1][7].occupant = blacks['black_knight_1']
-        squares[2][7].occupant = blacks['black_bishop_1']
+        squares[3][7].occupant = blacks['black_bishop_1']
         squares[3][7].occupant = blacks['black_queen']
         squares[4][7].occupant = blacks['black_king']
         squares[5][7].occupant = blacks['black_bishop_2']
@@ -219,7 +219,7 @@ class Board:
         if piece is None:
             print('this square is empty')
             return
-        elif piece.color is not player_color:
+        elif piece.color != player_color:
             print('this is not your piece to move')
             return
         valid_moves = piece.get_valid_moves(position, self)
@@ -228,20 +228,51 @@ class Board:
     def __repr__(self):
         boardStr = ''
         endStr = '''
- |________________________________________
-     a    b    c    d    e    f    g    h  '''
-        for i in range(len(self._squares)-1, -1, -1):
+ |_________________________________________________________________________
+       a        b        c        d        e        f        g        h       '''
+        for i in range(len(self.squares)-1, -1, -1):
             rowStr = f''' |
-{i+1}| '''
+ |
+{i+1}|
+ |
+ |'''
             row = self._squares[i]
             for j in range(len(row)):
                 square = row[j]
                 color = 'W'
                 if square.is_black:
                     color = 'B'
-                rowStr += f'  {color}  '
+                rowStr += f'    {color}    '
             boardStr += f'''
 {rowStr}'''
+        return boardStr + endStr
+
+
+    def __repr__(self):
+        def make_square(occupant):
+            square = '''
+
+
+            '''
+
+        boardStr = ''
+        endStr = '''
+ |_________________________________________________________________________
+       a        b        c        d        e        f        g        h       '''
+        for i in range(len(self.squares)-1, -1, -1):
+            rowStr = f''' |
+ |
+{i+1}|
+ |
+ |'''
+            row = self.squares[i]
+            for j in range(len(row)):
+                square = row[j]
+                occupant = 'X'
+                piece = square.occupant
+                if piece is not None:
+                    occupant = 'piece'
+                rowStr += make_square(occupant)
         return boardStr + endStr
 
     #################################################################
@@ -250,7 +281,7 @@ newBoard.make_board()
 logging.info(newBoard)
 newBoard.create_pieces_for_new_game()
 newBoard.set_pieces_for_new_game()
-position = (3, 0)
+position = (1, 0)
 square = newBoard.get_square(position)
 piece = square.occupant
 logging.info(f'square: {square} piece: {piece}')
@@ -270,58 +301,3 @@ print(piece.color)
 # logging.info(newBoard.white_pieces)
 # whiteKingStartPos = newBoard.white_pieces['white_king'].get_position()
 # blackKingStartPos = newBoard.black_pieces['black_king'].get_position()
-
-
-# logging.info(whiteKingStartPos)
-# logging.info(newBoard.white_pieces['white_king'].get_square_name_from_pos())
-# whiteKingSq = newBoard._squares[whiteKingStartPos[0]][whiteKingStartPos[1]]
-# logging.info(
-# f'white king square name: {whiteKingSq.get_square_name_from_pos()}')
-# blackKingSq = newBoard._squares[blackKingStartPos[0]][blackKingStartPos[1]]
-# logging.info(
-# f'black king square name: {blackKingSq.get_square_name_from_pos()}')
-
-# sq = newBoard._squares[0][0]
-# logging.info(f'board coords {sq.get_square_name_from_pos()}')
-# dummyPiece = Pawn((0, 0), 'White')
-# logging.info(f'piece info: {dummyPiece}')
-# logging.info(f'square info: {sq}')
-# logging.info(f'square 0 0 occ: {sq.occupant}')
-# logging.info(f'square 0 0 is_occ: {sq.is_occupied()}')
-
-# sq.occupant = dummyPiece
-# logging.info(f'square 0 0 occ: {sq.occupant}')
-# logging.info(f'square 0 0 is_occ: {sq.is_occupied()}')
-# if sq.is_occupied():
-#     logging.info(sq.occupant)
-#     sq.occupant = None
-#     logging.info(sq.occupant)
-
-"""TO MAKE A MOVE:
-    - assume that move is valid for particular piece - will add method
-        - "valid move" depends on piece type and position
-            - position must be within the board
-            - position must be of piece's ability
-            - position must be unoccupied or occupied by opposing piece
-            - SPECIAL CASE FOR KINGS - WORRY LATER
-    - if move valid (again ONLY based on piece type and position):
-        - if Square.is_occupied() is False: move piece
-            - "moving piece": set occupant in square; change piece position
-        - elif Square.is_occupied() is True: check occupant
-            - if occupant is same color, move is invalid - DON'T MOVE
-            - if occupant is diff color, move is valid
-                - change current occupant is_captured to True
-                - move piece: set occupant in square, change piece position.
-
-    - I should add a method on each piece type that will return all potential moves based ONLY on piece type and current position
-        - this is because piece has no knowledge of other pieces on the board
-    - the board will filter out invalid moves based on if current occupant color for each valid move matches the piece to be moved
-    - the result of this filtering are ACTUALLY valid moves
-    - only distinction from that point is if a piece will be caputred or not.
-
-
-    **thought: the valid moves thing needs to be completely on a piece, so maybe a piece needs to know about the squares on board class.
-    I say this because valid moves is different for each piece. For example, most pieces can only move until they reach another piece - they can't move beyond that. But knights dpon't care about that.
-    I can either pass the board into each get_valid_moves for each piece, OR I can put a special case on the board class for piece name is knight - in that case we get rid of thing that stops piece movement if it encounters another piece.
-
-                    """
