@@ -11,6 +11,10 @@
 #             - end result will be possible moves
 
 class Piece:
+    diag_move_incs = [(1, 1), (-1, 1), (1, -1), (-1, -1)]
+    straight_move_incs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    all_move_incs = [*diag_move_incs, *straight_move_incs]
+
     def __init__(self, color, is_captured=False):  # , name=None):
         # self._position = position
         self._color = color
@@ -30,12 +34,14 @@ class Piece:
     def _get_moves_in_dir(self, position, board, col_inc, row_inc, max_count=7, can_attack=True, only_attack=False):
         """
         This method calculates all moves in a straight line
-        col_inc and row_inc should be +1, 0, or -1 for rook, knight, bishop, and queen
-        straight lines with only one of col_inc or row_inc non-zero
-        diagonal lines with both non-zero
-        for king we can calculate moves with max_count = 1
-        can_attack property is primarily for pawns - pawns cannot attack moving straight up and down. For all others True is correct
-
+        - col_inc and row_inc should be +1, 0, or -1 for rook, knight, bishop, and queen
+        - straight lines with only one of col_inc or row_inc non-zero
+        - diagonal lines with both non-zero
+        - for king we can calculate moves with max_count = 1
+        - can_attack property is primarily for pawns - pawns cannot attack moving straight up and down. For all others True is correct
+            - I may be doing too much with this function - maybe it would be better to have a couple different functions
+            - just something to consider - for now this is ok
+        - each specific piece will implement this function in a specific way to calculate possible moves
         """
         moves_list = []
         column, row = position

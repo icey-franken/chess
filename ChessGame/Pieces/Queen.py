@@ -4,75 +4,67 @@ from . import Piece
 class Queen(Piece.Piece):
     def get_valid_moves(self, position, board):
         valid_moves_list = []
-        # for queen we don't care about color
-        # there are 8 move vectors - each one continues until it hits the edge of board or a piece
-        # if piece is foe, add that move as valid
-        # add moving up rows moves
-        valid_moves_list += self._get_moves_in_dir(position, board, 0, 1)
-        valid_moves_list += self._get_moves_in_dir(position, board, 0, -1)
-        valid_moves_list += self._get_moves_in_dir(position, board, -1, 0)
-        valid_moves_list += self._get_moves_in_dir(position, board, 1, 0)
-        valid_moves_list += self._get_moves_in_dir(position, board, 1, 1)
-        valid_moves_list += self._get_moves_in_dir(position, board, 1, -1)
-        valid_moves_list += self._get_moves_in_dir(position, board, -1, 1)
-        valid_moves_list += self._get_moves_in_dir(position, board, -1, -1)
-
+        for col_inc, row_inc in self.all_move_incs:
+            moves = self._get_moves_in_dir(position, board, col_inc, row_inc)
+            valid_moves_list += moves
         return valid_moves_list
 
-    # def _get_moves_in_row(self, position, board, row_inc):
-    #     row_moves_list = []
-    #     column, row = position
-    #     next_row = row + row_inc
-    #     while next_row <= 7 and next_row >= 0:
-    #         next_pos = (column, next_row)
-    #         # if next square is empty then move valid
-    #         square = board.get_square(next_pos)
-    #         if square.is_open():
-    #             row_moves_list.append(next_pos)
-    #         else:
-    #             if square.occupant.color != self.color:
-    #                 row_moves_list.append(next_pos)
-    #             break
-    #         next_row += row_inc
-    #     return row_moves_list
 
-    # def _get_moves_in_col(self, position, board, col_inc):
-    #     col_moves_list = []
+# def _get_moves_in_row(self, position, board, row_inc):
+#     row_moves_list = []
+#     column, row = position
+#     next_row = row + row_inc
+#     while next_row <= 7 and next_row >= 0:
+#         next_pos = (column, next_row)
+#         # if next square is empty then move valid
+#         square = board.get_square(next_pos)
+#         if square.is_open():
+#             row_moves_list.append(next_pos)
+#         else:
+#             if square.occupant.color != self.color:
+#                 row_moves_list.append(next_pos)
+#             break
+#         next_row += row_inc
+#     return row_moves_list
+
+# def _get_moves_in_col(self, position, board, col_inc):
+#     col_moves_list = []
+#     column, row = position
+#     next_col = column + col_inc
+#     while next_col <= 7 and next_col >= 0:
+#         next_pos = (next_col, row)
+#         # if next square is empty then move valid
+#         square = board.get_square(next_pos)
+#         if square.is_open():
+#             col_moves_list.append(next_pos)
+#         else:
+#             if square.occupant.color != self.color:
+#                 col_moves_list.append(next_pos)
+#             break
+#         next_col += col_inc
+#     return col_moves_list
+
+
+    # def _get_moves_in_dir(self, position, board, col_inc, row_inc):
+    #     moves_list = []
     #     column, row = position
     #     next_col = column + col_inc
-    #     while next_col <= 7 and next_col >= 0:
-    #         next_pos = (next_col, row)
+    #     next_row = row + row_inc
+    #     next_pos = (next_col, next_row)
+    #     while board.on_board(next_pos):
+    #         # next_pos = (next_col, row)
     #         # if next square is empty then move valid
     #         square = board.get_square(next_pos)
     #         if square.is_open():
-    #             col_moves_list.append(next_pos)
+    #             moves_list.append(next_pos)
     #         else:
     #             if square.occupant.color != self.color:
-    #                 col_moves_list.append(next_pos)
+    #                 moves_list.append(next_pos)
     #             break
     #         next_col += col_inc
-    #     return col_moves_list
-
-    def _get_moves_in_dir(self, position, board, col_inc, row_inc):
-        moves_list = []
-        column, row = position
-        next_col = column + col_inc
-        next_row = row + row_inc
-        next_pos = (next_col, next_row)
-        while board.on_board(next_pos):
-            # next_pos = (next_col, row)
-            # if next square is empty then move valid
-            square = board.get_square(next_pos)
-            if square.is_open():
-                moves_list.append(next_pos)
-            else:
-                if square.occupant.color != self.color:
-                    moves_list.append(next_pos)
-                break
-            next_col += col_inc
-            next_row += row_inc
-            next_pos = (next_col, next_row)
-        return moves_list
+    #         next_row += row_inc
+    #         next_pos = (next_col, next_row)
+    #     return moves_list
 
         #  and board.get_square((column, next_row)).is_occupied
         # for i in range(len(valid_piece_moves)):
