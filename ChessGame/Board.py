@@ -250,7 +250,7 @@ newBoard.make_board()
 logging.info(newBoard)
 newBoard.create_pieces_for_new_game()
 newBoard.set_pieces_for_new_game()
-position = (3, 4)
+position = (3, 0)
 square = newBoard.get_square(position)
 piece = square.occupant
 logging.info(f'square: {square} piece: {piece}')
@@ -262,7 +262,6 @@ logging.info(
 
 print(piece.name)
 print(piece.color)
-
 
 # logging.info(newBoard.squares)
 # newBoard.clear_board()

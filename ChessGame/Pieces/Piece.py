@@ -27,13 +27,14 @@ class Piece:
     def name(self):
         return self._name
 
-    def _get_moves_in_dir(self, position, board, col_inc, row_inc, max_count=7):
+    def _get_moves_in_dir(self, position, board, col_inc, row_inc, max_count=7, can_attack=True, only_attack=False):
         """
         This method calculates all moves in a straight line
         col_inc and row_inc should be +1, 0, or -1 for rook, knight, bishop, and queen
         straight lines with only one of col_inc or row_inc non-zero
         diagonal lines with both non-zero
         for king we can calculate moves with max_count = 1
+        can_attack property is primarily for pawns - pawns cannot attack moving straight up and down. For all others True is correct
 
         """
         moves_list = []
@@ -46,10 +47,10 @@ class Piece:
             # next_pos = (next_col, row)
             # if next square is empty then move valid
             square = board.get_square(next_pos)
-            if square.is_open():
+            if not only_attack and square.is_open():
                 moves_list.append(next_pos)
             else:
-                if square.occupant.color != self.color:
+                if can_attack and square.occupant.color != self.color:
                     moves_list.append(next_pos)
                 break
             next_col += col_inc

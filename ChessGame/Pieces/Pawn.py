@@ -50,31 +50,58 @@ class Pawn(Piece.Piece):
             # based on this list we will highlight valid squares
             return valid_board_moves
         """
-
         valid_moves_list = []  # remember - this is a list of sublists for each direction
         # pawns only have one direction (without attacking diagonals) and therefore one sublist but we still need nested form
-        column, row = position
-        # valid_moves_sublist = []
-        start_row = 1
-        row_inc = 1
-        if self.color == 'Black':
-            start_row = 6
-            row_inc = -1
-        # pawns can always move one row if space open
-        next_row = row + row_inc
-        is_open = board.get_square((column, next_row)).is_open()
-        if next_row <= 7 and next_row >= 0 and is_open:
-            valid_moves_list.append((column, next_row))
-            # if first move, pawn can also move up two rows
-            # we only do this check if first check satisfied
-            # i.e. next row unoccupied
-            next_row = row + 2 * row_inc
-            is_open = board.get_square((column, next_row)).is_open()
-            if start_row == row and is_open:
-                valid_moves_list.append((column, next_row))
-        # valid_moves_list.append(valid_moves_sublist)
-        valid_moves_list += self._get_valid_attack_moves(position, board)
+
+        if self.color is 'White':
+            # if first move (i.e. row is 1) then max_count is 2 - otherwise it's 1
+            max_count = 2 if position[1] == 1 else 1
+            # moves straigt forward
+            valid_moves_list += self._get_moves_in_dir(
+                position, board, 0, 1, max_count=max_count, can_attack=False)
+
+            valid_moves_list += self._get_moves_in_dir(
+                position, board, 1, 1, max_count=1, can_attack=True, only_attack=True)
+
+            valid_moves_list += self._get_moves_in_dir(
+                position, board, -1, 1, max_count=1, can_attack=True, only_attack=True)
+
+        else:
+            max_count = 2 if position[1] == 6 else 1
+
+            valid_moves_list += self._get_moves_in_dir(
+                position, board, 0, -1, max_count=max_count, can_attack=False)
+
+            valid_moves_list += self._get_moves_in_dir(
+                position, board, 1, -1, max_count=1, can_attack=True, only_attack=True)
+
+            valid_moves_list += self._get_moves_in_dir(
+                position, board, -1, -1, max_count=1, can_attack=True, only_attack=True)
+
         return valid_moves_list
+
+        # column, row = position
+        # # valid_moves_sublist = []
+        # start_row = 1
+        # row_inc = 1
+        # if self.color == 'Black':
+        #     start_row = 6
+        #     row_inc = -1
+        # # pawns can always move one row if space open
+        # next_row = row + row_inc
+        # is_open = board.get_square((column, next_row)).is_open()
+        # if next_row <= 7 and next_row >= 0 and is_open:
+        #     valid_moves_list.append((column, next_row))
+        #     # if first move, pawn can also move up two rows
+        #     # we only do this check if first check satisfied
+        #     # i.e. next row unoccupied
+        #     next_row = row + 2 * row_inc
+        #     is_open = board.get_square((column, next_row)).is_open()
+        #     if start_row == row and is_open:
+        #         valid_moves_list.append((column, next_row))
+        # # valid_moves_list.append(valid_moves_sublist)
+        # valid_moves_list += self._get_valid_attack_moves(position, board)
+        # return valid_moves_list
 
     def _get_valid_attack_moves(self, position, board):
         valid_attacks = []
