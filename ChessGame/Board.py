@@ -5,21 +5,7 @@ from Pieces.Knight import Knight
 from Pieces.Bishop import Bishop
 from Pieces.Rook import Rook
 from Pieces.Pawn import Pawn
-import logging
-logger = logging.getLogger(__name__)
-# formatter = logging.Formatter('{%(pathname)s:%(lineno)d}')
-FORMAT = '[%(filename)s:%(lineno)d] %(message)s'
-# FORMAT = '%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s'
-# DATEFMT = '%Y-%m-%d:%H:%M:%S'
-LEVEL = logging.INFO
 
-logging.basicConfig(format=FORMAT, level=LEVEL)
-
-# logger = logging.getLogger(__name__)
-# logger.debug("This is a debug log")
-# logger.info("This is an info log")
-# logger.critical("This is critical")
-# logger.error("An error occurred")
 
 # There's gotta be a better way to do imports
 # from Pieces import (
@@ -39,17 +25,20 @@ logging.basicConfig(format=FORMAT, level=LEVEL)
 
 
 class Board:
+    files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+    ranks = ['1', '2', '3', '4', '5', '6', '7', '8']
+
     def __init__(self):
         self._squares = []
         self._white_pieces = None
         self._black_pieces = None
 
-    def make_board(self):
+    def create_board(self):
         new_squares = []
         for y in range(8):
             column = []
             for x in range(8):
-                square = Square(x, y)
+                square = Square(y, x)
                 column.append(square)
             new_squares.append(column)
         self.squares = new_squares
@@ -93,6 +82,31 @@ class Board:
     #         del self._black_pieces[removed_piece]
     #     else:
     #         print('piece not in black_pieces')
+
+    def translate_file_rank_to_col_row(self, file_rank):
+        '''rank_file should be a string like a1, b5, h8, etc.
+        - files are letters, ranks are numbers
+        - this method turns it to a col, row tuple
+        - allows access to square in self.squares
+        '''
+        file = file_rank[0]
+        if file not in self.files:
+            print('Invalid file')
+            return
+        col = self.files.index(file)
+
+        rank = file_rank[1]
+        if rank not in self.ranks:
+            print('Invalid rank')
+            return
+        row = self.ranks.index(rank)
+        return (col, row)
+
+    def translate_col_row_to_file_rank(self, pos):
+        col, row = pos
+        file = self.files[col]
+        rank = self.ranks[row]
+        return f'{file}{rank}'
 
     def create_pieces_for_new_game(self):
         """
@@ -177,7 +191,7 @@ class Board:
 
         squares[0][7].occupant = blacks['black_rook_1']
         squares[1][7].occupant = blacks['black_knight_1']
-        squares[3][7].occupant = blacks['black_bishop_1']
+        squares[2][7].occupant = blacks['black_bishop_1']
         squares[3][7].occupant = blacks['black_queen']
         squares[4][7].occupant = blacks['black_king']
         squares[5][7].occupant = blacks['black_bishop_2']
@@ -207,13 +221,34 @@ class Board:
         column, row = position
         return (column >= 0 and column <= 7 and row >= 0 and row <= 7)
 
-    def get_valid_moves(self, position):
+    def is_valid_piece_selection(self, position, player_color):
+        '''this method returns none if a square is empty
+        or if the piece does not belong to the current player.
+        Otherwise it returns the valid piece.
+        '''
+        if position is None:
+            return
+        square = self.get_square(position)
+        piece = square.occupant
+        print(f'''
+    From line 233 in board:
+        position: {position}
+        square: {square}
+        piece: {piece} ''')
+        if piece is None:
+            print('That space is empty')
+            return
+        elif piece.color != player_color:
+            print('That is not your piece')
+            return
+        else:
+            return piece
+
+    def get_valid_moves(self, position, player_color):
         """
         This method simply determines if a piece is a player's to move.
         If it is, then it calls the piece's get_valid_moves method.
         """
-        # TODO define player class/color - default white for now
-        player_color = 'White'
         square = self.get_square(position)
         piece = square.occupant
         if piece is None:
@@ -241,12 +276,12 @@ class Board:
   |__________|__________|__________|__________|__________|__________|__________|__________|'''
             return row
 
-        rowStr=''
+        rowStr = ''
         transposed_board = [[], [], [], [], [], [], [], []]
         for i in range(len(self.squares)):
             row = self.squares[i]
             for j in range(len(row)):
-                col_item = 'xx' if row[j].occupant is None else row[j].occupant
+                col_item = '--' if row[j].occupant is None else row[j].occupant
                 transposed_board[j].append(col_item)
                 # col.append(col_item)
         for i in range(len(transposed_board), 0, -1):
@@ -255,12 +290,13 @@ class Board:
             rowStr += make_row(occupants, i)
         return startRowStr+rowStr+endRowStr
 
+
     #################################################################
-newBoard = Board()
-newBoard.make_board()
-newBoard.create_pieces_for_new_game()
-newBoard.set_pieces_for_new_game()
-logging.info(newBoard)
+# newBoard = Board()
+# newBoard.make_board()
+# newBoard.create_pieces_for_new_game()
+# newBoard.set_pieces_for_new_game()
+# logging.info(newBoard)
 # position = (1, 0)
 # square = newBoard.get_square(position)
 # piece = square.occupant

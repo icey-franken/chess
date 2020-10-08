@@ -72,7 +72,11 @@ class Piece:
                 # if square is occupied by opposing piece, add that move
                 # can_attack again is special case for pawns
                 #   - pawn forward moves CANNOT attack - unique
-                if can_attack and square.occupant.color != self.color:
+                # just for pawns - if it's a pawn and the adj atk square
+                # is open, we don't want to do anything
+                if only_attack and square.is_open():
+                    break
+                elif can_attack and square.occupant.color != self.color:
                     moves_list.append(next_pos)
                 # in any case, after first occupied square we break
                 break
