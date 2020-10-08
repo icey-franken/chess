@@ -225,35 +225,12 @@ class Board:
         valid_moves = piece.get_valid_moves(position, self)
         return valid_moves
 
-#     def __repr__(self):
-#         boardStr = ''
-#         endStr = '''
-#  |_________________________________________________________________________
-#        a        b        c        d        e        f        g        h       '''
-#         for i in range(len(self.squares)-1, -1, -1):
-#             rowStr = f''' |
-#  |
-# {i+1}|
-#  |
-#  |'''
-#             row = self._squares[i]
-#             for j in range(len(row)):
-#                 square = row[j]
-#                 color = 'W'
-#                 if square.is_black:
-#                     color = 'B'
-#                 rowStr += f'    {color}    '
-#             boardStr += f'''
-# {rowStr}'''
-#         return boardStr + endStr
-
-
     def __repr__(self):
 
         startRowStr = '''
   _________________________________________________________________________________________'''
         endRowStr = '''
-      a          b          c          d           e          f          g          h     '''
+       a          b          c          d          e          f          g          h     '''
 
         def make_row(x, row_num):
             row = f'''
