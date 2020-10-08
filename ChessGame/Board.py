@@ -230,11 +230,11 @@ class Board:
             return
         square = self.get_square(position)
         piece = square.occupant
-        print(f'''
-    From line 233 in board:
-        position: {position}
-        square: {square}
-        piece: {piece} ''')
+    #     print(f'''
+    # From line 233 in board:
+    #     position: {position}
+    #     square: {square}
+    #     piece: {piece} ''')
         if piece is None:
             print('That space is empty')
             return
@@ -260,9 +260,23 @@ class Board:
         valid_moves = piece.get_valid_moves(position, self)
         return valid_moves
 
+    def move_piece(self, piece_pos, move_pos):
+        piece_square = self.get_square(piece_pos)
+        piece = piece_square.occupant
+        piece_square.occupant = None
+        move_square = self.get_square(move_pos)
+        captured_piece = None
+        if move_square.is_occupied():
+            captured_piece = move_square.occupant
+            move_square.occupant = None
+            captured_piece.is_captured = True
+        move_square.occupant = piece
+        return captured_piece
+
     def __repr__(self):
 
         startRowStr = '''
+       a          b          c          d          e          f          g          h
   _________________________________________________________________________________________'''
         endRowStr = '''
        a          b          c          d          e          f          g          h     '''
@@ -271,7 +285,7 @@ class Board:
             row = f'''
   |          |          |          |          |          |          |          |          |
   |          |          |          |          |          |          |          |          |
-{row_num} |    {x[0]}    |    {x[1]}    |    {x[2]}    |    {x[3]}    |    {x[4]}    |    {x[5]}    |    {x[6]}    |    {x[7]}    |
+{row_num} |    {x[0]}    |    {x[1]}    |    {x[2]}    |    {x[3]}    |    {x[4]}    |    {x[5]}    |    {x[6]}    |    {x[7]}    | {row_num}
   |          |          |          |          |          |          |          |          |
   |__________|__________|__________|__________|__________|__________|__________|__________|'''
             return row
