@@ -161,8 +161,8 @@ class Game():
             if king_put_in_check:
                 print('''    You cannot put your own King in check - try again.
                 ''')
-                # users select a different square to move to
-                continue
+                # we return false so that user can select a wholly different piece
+                return False
             # if king not put in check, then move is good
             # we want real board to match simulated board
             self.board = board_copy
