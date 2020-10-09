@@ -273,13 +273,28 @@ class Board:
                 elif piece.name == 'King' and piece.color == color:
                     return square.pos
 
-    def king_in_check(self, color, king_pos = None):
+    def king_in_check(self, player_color, king_pos = None):
+        # king_position if necessary because if player is moving the king, we need to calculate check based on where king WILL be, not where it currently is
+        # if piece is NOT king, then this check serves to make sure that king is not currently in check.
+
+# FOR MAKING SURE THAT PLAYER TAKES CARE OF OWN KING
+        # added is_in_check property to player class
+        #   first we move the piece, but save previous "state"
+        #       in either case (check or not) we check if in check after piece move
+        #           if in check is true after piece move, rewind to before piece moved and prompt user that they can't put their king in check (if not in check before) or that their king still in check - try again (if in check before)
+                    # else if not in check after piece move, all is well - proceed.
+
+# NEED TO ADD FORMULA TO CHECK IF  MOVE PUTS OPPONENT KING IN CHECK
+        #   if king is currently in check, we move the piece first and then check if king still in check
+        #       if king remains in check, we undo the piece move
+        #       if king no longer in check, we proceed
+        #   if king is NOT currently in check,
         # get the position of king for whatever input color was
         # I know there are much more efficient ways to figure this out - but for now I will iterate through all squares and grab those with occupant.name of King
-        oppo_color = 'Black' if color == 'White' else 'White'
+        oppo_color = 'Black' if player_color == 'White' else 'White'
 
         if king_pos is None:
-            king_pos = self.get_king_pos(color)
+            king_pos = self.get_king_pos(player_color)
 
         if king_pos is None:
             print('error in king_in_check method in board.py line 291')
