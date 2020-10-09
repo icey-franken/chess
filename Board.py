@@ -230,11 +230,6 @@ class Board:
             return
         square = self.get_square(position)
         piece = square.occupant
-    #     print(f'''
-    # From line 233 in board:
-    #     position: {position}
-    #     square: {square}
-    #     piece: {piece} ''')
         if piece is None:
             print('That space is empty')
             return
@@ -246,19 +241,13 @@ class Board:
 
     def get_valid_moves(self, position, player_color):
         """
-        This method simply determines if a piece is a player's to move.
-        If it is, then it calls the piece's get_valid_moves method.
+        This method simply determines if a piece is a player's to move based on position and color.
+        If it is, then it calls the piece's get_valid_moves method and returns moves.
+        Otherwise it returns none.
         """
-        square = self.get_square(position)
-        piece = square.occupant
-        if piece is None:
-            print('this square is empty')
-            return
-        elif piece.color != player_color:
-            print('this is not your piece to move')
-            return
-        valid_moves = piece.get_valid_moves(position, self)
-        return valid_moves
+        piece = self.is_valid_piece_selection(position, player_color)
+        if piece is not None:
+            return piece.get_valid_moves(position, self)
 
     def move_piece(self, piece_pos, move_pos):
         piece_square = self.get_square(piece_pos)
