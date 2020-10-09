@@ -250,6 +250,8 @@ class Board:
             return piece.get_valid_moves(position, self)
 
     def move_piece(self, piece_pos, move_pos):
+        '''This method returns None if piece moved to open space,
+        or returns captured piece if space occupied by opponent piece'''
         piece_square = self.get_square(piece_pos)
         piece = piece_square.occupant
         piece_square.occupant = None
