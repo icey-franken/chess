@@ -2,7 +2,7 @@
 from . import Piece
 
 
-class Knight(Piece.Piece):
+class Knight(Piece):
     # we define knight_move_incs here and not on piece
     #   - only knight cares about these
     knight_move_incs = [(2, 1), (2, -1), (-2, 1), (-2, -1),

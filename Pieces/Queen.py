@@ -1,7 +1,7 @@
 from . import Piece
 
 
-class Queen(Piece.Piece):
+class Queen(Piece):
     def get_valid_moves(self, position, board):
         valid_moves_list = []
         for col_inc, row_inc in self.all_move_incs:

@@ -1,7 +1,7 @@
 from . import Piece
 
 
-class Rook(Piece.Piece):
+class Rook(Piece):
     def get_valid_moves(self, position, board):
         valid_moves_list = []
         for col_inc, row_inc in self.straight_move_incs:

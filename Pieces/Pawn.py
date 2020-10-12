@@ -1,7 +1,7 @@
 from . import Piece
 
 
-class Pawn(Piece.Piece):
+class Pawn(Piece):
 
     def get_valid_moves(self, position, board):
         valid_moves_list = []

@@ -1,10 +1,10 @@
 from Square import Square
-from Pieces.Queen import Queen
-from Pieces.King import King
-from Pieces.Knight import Knight
-from Pieces.Bishop import Bishop
-from Pieces.Rook import Rook
-from Pieces.Pawn import Pawn
+from Pieces import Queen, King, Knight, Bishop, Rook, Pawn
+# from Pieces import King
+# from Pieces import Knight
+# from Pieces import Bishop
+# from Pieces import Rook
+# from Pieces import Pawn
 
 
 # There's gotta be a better way to do imports

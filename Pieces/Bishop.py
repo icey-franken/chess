@@ -1,7 +1,9 @@
 from . import Piece
 
+class Bishop(Piece):
+    # def __init__(self, color, is_captured):
+        # super().__init__(self, color, is_captured)
 
-class Bishop(Piece.Piece):
     def get_valid_moves(self, position, board):
         valid_moves_list = []
         for col_inc, row_inc in self.diag_move_incs:
